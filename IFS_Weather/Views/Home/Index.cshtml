@@ -1,0 +1,64 @@
+﻿@model List<IFS_Weather.Models.WeatherModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+        }
+
+            table th {
+                background-color: #F7F7F7;
+                color: #333;
+                font-weight: bold;
+            }
+
+            table th, table td {
+                padding: 5px;
+                border: 1px solid #ccc;
+            }
+
+            table, table table td {
+                border: 0px solid #ccc;
+            }
+    </style>
+</head>
+<body>
+    <form id="form1">
+
+
+        <table id="tblWeather" border="0" cellpaddig="0" cellspacing="0" visible="false">
+            <tr>
+                <th colspan="2">
+                    Weather Info
+                </th>
+            </tr>
+            <tr>
+                <th rowspan="3">
+                    @foreach (var item in Model)
+                    {
+                        <h2>@item.CityName</h2>
+                        <h3>@item.MainStatus</h3>
+                        <h3>@item.Temperature</h3>
+                        <h4>@item.WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h4>
+                        <img src="@item.IconPath" />
+                    }
+
+
+                </th>
+            </tr>
+
+
+        </table>
+    </form>
+</body>
+</html>
+
