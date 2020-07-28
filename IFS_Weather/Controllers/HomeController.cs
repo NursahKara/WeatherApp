@@ -10,17 +10,20 @@ using Newtonsoft.Json.Linq;
 
 namespace IFS_Weather.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
 
         private static readonly HttpClient client = new HttpClient();
+        [Authorize]
         public async Task<ActionResult> Index()
         {
             var model = await GetWeatherInfo();
             return View(model);
         }
+        [AllowAnonymous]
         public ActionResult Login()
-        {
+        {   
             /////tasarım
             ///authentication
             return View();
