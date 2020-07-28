@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using IFS_Weather.Models;
 using Newtonsoft.Json.Linq;
+using System.Web.Security;
+using DevOne.Security.Cryptography.BCrypt;
 
 namespace IFS_Weather.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-
         private static readonly HttpClient client = new HttpClient();
-        [Authorize]
         public async Task<ActionResult> Index()
         {
             var model = await GetWeatherInfo();
@@ -23,10 +23,78 @@ namespace IFS_Weather.Controllers
         }
         [AllowAnonymous]
         public ActionResult Login()
-        {   
-            /////tasarım
-            ///authentication
+        {
             return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult Login(LoginModel model)
+        {
+            if (model == null)
+            {
+                ViewBag.LoginError = "Hatalı giriş!";
+                return View();
+            }
+            else
+            {
+                using (var ctx = new IFSAppContext())
+                {
+                    var u = ctx.Users.Where(w => w.Username == model.Username).SingleOrDefault();
+                    if (u != null && BCryptHelper.CheckPassword(model.Password, u.Password))
+                    {
+                        FormsAuthentication.SetAuthCookie(model.Username, false);
+                        ctx.UserLogs.Add(new UserLogModel{
+                            LogTime=DateTime.Now,
+                            Username=u.Username,
+                            IPAddress=Request.UserHostAddress,
+                            Log="Kullanıcı giriş yaptı",
+                        });
+                        ctx.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    ViewBag.LoginError = "Kullanıcı adı ya da şifre yanlış!";
+                    return View();
+                }
+            }
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult Register(RegisterModel model)
+        {
+            if (model == null)
+            {
+                ViewBag.LoginError = "Hatalı kullanıcı adı ya da şifre!";
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                using (var ctx = new IFSAppContext())
+                {
+                    var u = ctx.Users.Where(w => w.Username == model.Username).SingleOrDefault();
+                    if (u != null)
+                    {
+                        ViewBag.RegisterError = "Kullanıcı adı mevcut";
+                        return RedirectToAction("Login");
+                    }
+                    UserModel user = new UserModel()
+                    {
+                        DefaultCityName = model.DefaultCityName,
+                        Name = model.Name,
+                        Username = model.Username,
+                        Password = BCryptHelper.HashPassword(model.Password, BCryptHelper.GenerateSalt(12)),
+                        UserType = "Son Kullanıcı",
+                        Status = 1,
+                    };
+                    ctx.Users.Add(user);
+                    ctx.SaveChanges();
+                    return RedirectToAction("Login");
+                }
+            }
+        }
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login");
         }
         [NonAction]
         public async Task<List<WeatherModel>> GetWeatherInfo()
@@ -45,8 +113,8 @@ namespace IFS_Weather.Controllers
                     CityName = responseJson.SelectToken("data").SelectToken("request")[0].SelectToken("query").ToString().Split(',')[0],
                     Temperature = (int)w.SelectToken("avgtempC"),
                     MainStatus = w.SelectToken("hourly")[0].SelectToken("lang_tr")[0].SelectToken("value").ToString(),
-                    IconPath=w.SelectToken("hourly")[0].SelectToken("weatherIconUrl")[0].SelectToken("value").ToString()
-            });
+                    IconPath = w.SelectToken("hourly")[0].SelectToken("weatherIconUrl")[0].SelectToken("value").ToString()
+                });
             }
             return wlist;
         }

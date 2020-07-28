@@ -83,19 +83,23 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12" style="margin-top:20%;justify-content:center;align-items:center">
-                <form>
-                    <input type="text" style="border:none;width:100%    " placeholder="Kullanıcı Adı:" required />
-                    <hr />
-                    <input type="password" style="border:none" placeholder="Şifre:" required />
-                    <hr />
-                    <div style="flex-direction:row">
-                        <button style="align-items:flex-start" class="button">Giriş</button>
-                        <a class="nav-link" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modaluyeol">Üye Ol!</a>
-
-
-                    </div>
-
-                </form>
+                @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+                {
+                    <form>
+                        <input type="text" style="border:none;width:100%" placeholder="Kullanıcı Adı" name="Username" required />
+                        <hr />
+                        <input type="password" style="border:none" placeholder="Şifre" name="Password" required />
+                        <hr />
+                        <div style="flex-direction:row">
+                            <button style="align-items:flex-start" class="button">Giriş</button>
+                            <a class="nav-link" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modaluyeol">Üye Ol!</a>
+                            <br />
+                            <span style="color:red;justify-content:center">
+                                @ViewBag.LoginError
+                            </span>
+                        </div>
+                    </form>
+                }
             </div>
         </div>
     </div>
@@ -116,25 +120,33 @@
                     </center>
                 </div>
                 <div class="modal-body">
-                    <form action="/Home/Register" method="Post">
-                        <center>
-                            <input type="text" style="border:none; width:100%" name="adSoyad" placeholder="Ad Soyad" required />
-                            <br />
-                            <input type="password" style="border:none;width:100%" name="password" placeholder="Parola" required />
-                            <br />
-                            <input type="text" style="border:none;width:100%" name="email" placeholder="E-mail" required />
-                            <br />
-                            <select class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray" type="button" required>
-                                <option value="">Şehir Seçin</option>
-                                <option value="istanbul">İstanbul</option>
-                                <option value="izmir">İzmir</option>
-                                <option value="ankara">Ankara</option>
-                                <option value="sakarya">Sakarya</option>
-                            </select>
-                            <br />
-                            <button style="align-items:flex-start;margin-top:5px" class="button" type="submit">Kayıt Ol</button>
-                        </center>
-                    </form>
+                    @using (Html.BeginForm("Register", "Home", FormMethod.Post))
+                    {
+                        <form>
+                            <center>
+                                <input type="text" style="border:none; width:100%" name="Name" placeholder="İsim" required />
+                                <br />
+                                <input type="password" style="border:none;width:100%" name="Password" placeholder="Parola" required />
+                                <br />
+                                <input type="text" style="border:none;width:100%" name="Username" placeholder="Kullanıcı Adı" required />
+                                <br />
+                                <select name="DefaultCityName" class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray" type="button" required>
+                                    <option value="">Şehir Seçin</option>
+                                    <option value="istanbul">İstanbul</option>
+                                    <option value="izmir">İzmir</option>
+                                    <option value="ankara">Ankara</option>
+                                    <option value="sakarya">Sakarya</option>
+                                </select>
+                                <br />
+                                <button style="align-items:flex-start;margin-top:5px" class="button" type="submit">Kayıt Ol</button>
+                                <br />
+                                <span style="color:red;justify-content:center">
+                                    @ViewBag.LoginError
+                                </span>
+                            </center>
+                        </form>
+                    }
+
                 </div>
             </div>
         </div>
