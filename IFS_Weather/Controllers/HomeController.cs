@@ -12,14 +12,22 @@ using DevOne.Security.Cryptography.BCrypt;
 
 namespace IFS_Weather.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Son Kullanıcı, Yönetici")]
     public class HomeController : Controller
     {
         private static readonly HttpClient client = new HttpClient();
         public async Task<ActionResult> Index()
         {
-            var model = await GetWeatherInfo();
-            return View(model);
+            using (var ctx = new IFSAppContext())
+            {
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();   //forms authentication identity.name i yani benzersiz olan kullanıcı adını tutuyor. kullanıcı adı cookie de tutulan bilgi    
+                return View(ctx.WeatherInfos.Where(w => w.CityName == user.DefaultCityName && w.WeatherDate.Date.Day >= DateTime.Now.Date.Day).ToList());  //defaultcityname in verilerini getir ve geçmiş veriler gelmesin
+            }
+        }
+        [Authorize(Roles = "Yönetici")]
+        public ActionResult Admin()
+        {
+            return View();
         }
         [AllowAnonymous]
         public ActionResult Login()
@@ -43,11 +51,12 @@ namespace IFS_Weather.Controllers
                     if (u != null && BCryptHelper.CheckPassword(model.Password, u.Password))
                     {
                         FormsAuthentication.SetAuthCookie(model.Username, false);
-                        ctx.UserLogs.Add(new UserLogModel{
-                            LogTime=DateTime.Now,
-                            Username=u.Username,
-                            IPAddress=Request.UserHostAddress,
-                            Log="Kullanıcı giriş yaptı",
+                        ctx.UserLogs.Add(new UserLogModel
+                        {
+                            LogTime = DateTime.Now,
+                            Username = u.Username,
+                            IPAddress = Request.UserHostAddress,
+                            Log = "Kullanıcı giriş yaptı",
                         });
                         ctx.SaveChanges();
                         return RedirectToAction("Index");
@@ -96,27 +105,53 @@ namespace IFS_Weather.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Login");
         }
-        [NonAction]
-        public async Task<List<WeatherModel>> GetWeatherInfo()
+        [Authorize(Roles = "Yönetici")]
+        public async Task<ActionResult> UpdateWeatherInfo()
         {
             var apiKey = "ddaa7ce35cb5426c9b2111123202407";
-            var url = $"http://api.worldweatheronline.com/premium/v1/weather.ashx?key={apiKey}&q=istanbul&format=json&num_of_days=7&lang=tr";
-            var responseString = await client.GetStringAsync(url);
-            var responseJson = JObject.Parse(responseString);
-            List<WeatherModel> wlist = new List<WeatherModel>();
-            var weatherList = responseJson.SelectToken("data").SelectToken("weather");
-            foreach (var w in weatherList)
+            List<string> cities = new List<string>();
+            cities.Add("istanbul");
+            cities.Add("izmir");
+            cities.Add("ankara");
+            cities.Add("sakarya");
+            using (var ctx = new IFSAppContext())
             {
-                wlist.Add(new WeatherModel()
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
+                foreach (var city in cities)
                 {
-                    WeatherDate = DateTime.Parse(w.SelectToken("date").ToString()),
-                    CityName = responseJson.SelectToken("data").SelectToken("request")[0].SelectToken("query").ToString().Split(',')[0],
-                    Temperature = (int)w.SelectToken("avgtempC"),
-                    MainStatus = w.SelectToken("hourly")[0].SelectToken("lang_tr")[0].SelectToken("value").ToString(),
-                    IconPath = w.SelectToken("hourly")[0].SelectToken("weatherIconUrl")[0].SelectToken("value").ToString()
+                    var url = $"http://api.worldweatheronline.com/premium/v1/weather.ashx?key={apiKey}&q={city}&format=json&num_of_days=7&lang=tr";
+                    var responseString = await client.GetStringAsync(url);
+                    var responseJson = JObject.Parse(responseString);
+                    List<WeatherModel> wlist = new List<WeatherModel>();
+                    var weatherList = responseJson.SelectToken("data").SelectToken("weather");
+                    foreach (var w in weatherList)
+                    {
+                        var wm = new WeatherModel()
+                        {
+                            WeatherDate = DateTime.Parse(w.SelectToken("date").ToString()),
+                            CityName = responseJson.SelectToken("data").SelectToken("request")[0].SelectToken("query").ToString().Split(',')[0],
+                            Temperature = (int)w.SelectToken("avgtempC"),
+                            MainStatus = w.SelectToken("hourly")[0].SelectToken("lang_tr")[0].SelectToken("value").ToString(),
+                            IconPath = w.SelectToken("hourly")[0].SelectToken("weatherIconUrl")[0].SelectToken("value").ToString()
+                        };
+                        bool isExists = ctx.WeatherInfos.Where(x => x.WeatherDate == wm.WeatherDate && x.CityName == wm.CityName).FirstOrDefault() != null;
+                        if (!isExists)
+                        {
+                            wlist.Add(wm);
+                        }
+                    }
+                    ctx.WeatherInfos.AddRange(wlist);
+                }
+                ctx.UserLogs.Add(new UserLogModel()
+                {
+                    LogTime = DateTime.Now,
+                    Username = user.Username,
+                    IPAddress = Request.UserHostAddress,
+                    Log = "yönetici veri çekti"
                 });
+                ctx.SaveChanges();
             }
-            return wlist;
+            return RedirectToAction("Admin");
         }
     }
 }

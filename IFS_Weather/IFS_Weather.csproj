@@ -153,6 +153,7 @@
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Models\WeatherModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\UserRoleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assests\favicon.ico" />

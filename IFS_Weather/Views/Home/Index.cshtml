@@ -3,58 +3,48 @@
 <html>
 <head>
     <title></title>
-    <style type="text/css">
-        body {
-            font-family: Arial;
-            font-size: 10pt;
-        }
-
-        table {
-            border: 1px solid #ccc;
-            border-collapse: collapse;
-        }
-
-            table th {
-                background-color: #F7F7F7;
-                color: #333;
-                font-weight: bold;
-            }
-
-            table th, table td {
-                padding: 5px;
-                border: 1px solid #ccc;
-            }
-
-            table, table table td {
-                border: 0px solid #ccc;
-            }
-    </style>
-
+   
 </head>
 <body>
-    <form id="form1">
-        @Html.ActionLink("Çıkış Yap", "LogOut")
-        <a href="LogOut" style="color:gray">Çıkış Yap</a>
-        <table id="tblWeather" border="0" cellpaddig="0" cellspacing="0" visible="false">
-            <tr>
-                <th colspan="2">
-                    Weather Info
-                </th>
-            </tr>
-            <tr>
-                <th rowspan="3">
-                    @foreach (var item in Model)
-                    {
-                        <h2>@item.CityName</h2>
-                        <h3>@item.MainStatus</h3>
-                        <h3>@item.Temperature</h3>
-                        <h4>@item.WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h4>
-                        <img src="@item.IconPath" />
-                    }
-                </th>
-            </tr>
-        </table>
-    </form>
+    <div class="navbar navbar-light navbar-fixed-top">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="~/Views/Home/Index.cshtml" style="color: black;">Ana Sayfa <span class="sr-only">(current)</span></a>
+                </li>
+                <li>
+                    <a href="#" style="color:black;">Profil</a>
+                </li>
+                <li>
+                    <a href="LogOut" style="color:black">Çıkış Yap</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div style="background-color:#d8d5d5;height:auto;width:650px;border-radius:25px;padding:15px">
+        @* @Model[0].CityName*@
+        @foreach (var item in Model)
+        {
+
+            <h2>@item.CityName</h2>
+            <h5>@item.WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h5>
+            <h5>@item.MainStatus</h5>
+            <div>
+                <div style="float:left;">
+                    <img src="@item.IconPath" style="border-radius:8px" />
+                </div>
+                <div style="float:left;margin-left:20px">
+                    <h3>@item.Temperature °C</h3>
+                </div>
+            </div>
+            <br /><br /><br />
+            <hr />
+
+        }
+    </div>
+
+
+
 </body>
 </html>
 
