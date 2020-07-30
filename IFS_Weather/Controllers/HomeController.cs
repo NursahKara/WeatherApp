@@ -21,13 +21,22 @@ namespace IFS_Weather.Controllers
             using (var ctx = new IFSAppContext())
             {
                 var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();   //forms authentication identity.name i yani benzersiz olan kullanıcı adını tutuyor. kullanıcı adı cookie de tutulan bilgi    
-                return View(ctx.WeatherInfos.Where(w => w.CityName == user.DefaultCityName && w.WeatherDate.Date.Day >= DateTime.Now.Date.Day).ToList());  //defaultcityname in verilerini getir ve geçmiş veriler gelmesin
+                return View(ctx.WeatherInfos.Where(w => w.CityName == user.DefaultCityName).ToList());  //defaultcityname in verilerini getir ve geçmiş veriler gelmesin
+                /////&& w.WeatherDate.Date.Day >= DateTime.Now.Date.Day
             }
         }
         [Authorize(Roles = "Yönetici")]
         public ActionResult Admin()
         {
             return View();
+        }
+        public async Task<ActionResult> Profile()
+        {
+            using (var ctx=new IFSAppContext())
+            {
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
+                return View(user);
+            }
         }
         [AllowAnonymous]
         public ActionResult Login()

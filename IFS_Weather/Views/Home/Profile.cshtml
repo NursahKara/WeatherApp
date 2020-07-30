@@ -1,0 +1,90 @@
+﻿@model IFS_Weather.Models.UserModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<h2>Profile</h2>
+
+@Model.Username
+@Model.Name
+@Model.DefaultCityName
+<a class="nav-link" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modalchangecity">Şehir Değiştir</a>
+<style>
+     .button {
+            position: relative;
+            background-color: darkviolet;
+            border: none;
+            font-size: 12px;
+            color: #FFFFFF;
+            padding: 10px;
+            width: 100px;
+            text-align: center;
+            transition-duration: 0.4s;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 18px;
+            margin-bottom: 8px
+        }
+
+            .button:after {
+                content: "";
+                background: black;
+                display: block;
+                position: absolute;
+                padding-top: 300%;
+                padding-left: 350%;
+                margin-left: -20px !important;
+                margin-top: -120%;
+                opacity: 0;
+                transition: all 0.8s
+            }
+
+            .button:active:after {
+                padding: 0;
+                margin: 0;
+                opacity: 1;
+                transition: 0s
+            }
+</style>
+
+<!-- Modal change city -->
+<div class="modal fade" style="margin-top:40px;" id="modalchangecity" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background:url(../../assests/sky.jpg);background-size:cover;background-repeat:no-repeat;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color:black">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Profile", "Home", FormMethod.Post))
+                {
+                    <form>
+                        <center>
+                            <select name="DefaultCityName" class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray" type="button" required>
+                                <option value="">Şehir Seçin</option>
+                                <option value="istanbul">İstanbul</option>
+                                <option value="izmir">İzmir</option>
+                                <option value="ankara">Ankara</option>
+                                <option value="sakarya">Sakarya</option>
+                            </select>
+                            <br />
+                            <button style="align-items:flex-start;margin-top:5px;color:white" class="button" type="submit">@Html.ActionLink("Değiştir", "Profile")</button>
+
+
+                            <br />
+                            <span style="color:red;justify-content:center">
+                                @ViewBag.LoginError
+                            </span>
+                        </center>
+                    </form>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
