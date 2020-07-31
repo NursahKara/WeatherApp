@@ -1,0 +1,134 @@
+﻿@model IEnumerable<IFS_Weather.Models.UserModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+        body {
+            background-image: url(../../assests/blur.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+        }
+
+        #main {
+            height: auto;
+            width: 1200px;
+            background-image: url(../../assests/manzara.jpg);
+            border-radius: 15px;
+            margin: 30px auto auto auto;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-color: black;
+            border-width: 20px;
+            justify-content: flex-end;
+            align-items: flex-end;
+            vertical-align: bottom
+        }
+
+        .header {
+            height: 350px;
+            padding: 30px
+        }
+
+        .weatherInfoHeader {
+            height: 50px;
+            padding-left: 5px;
+            padding-top: 20px
+        }
+
+        .weatherinfo {
+            height: 200px;
+            width: 1200px;
+            opacity: 0.5;
+            border-radius: 0 0 15px 15px;
+            flex-direction: row;
+        }
+
+        .parent-style-one a {
+            text-decoration: none;
+            color: white
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="color: white ">Admin</h1>
+        <hr />
+        <h2 style="color:white;text-decoration:none">Kullanıcı Yönetimi</h2>
+        <br />
+        <button><a href="Create" style="text-decoration:none;color:black">Kullanıcı Ekle</a></button>
+        <br />
+        <br />
+
+        <table class="table">
+            <tr style="color:white">
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.Password)
+                </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DefaultCityName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr style="color:white">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DefaultCityName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        <div class="parent-style-one">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
+                        </div>
+                    </td>
+
+                </tr>
+            }
+        </table>
+        <div class="parent-style-one">
+            @Html.ActionLink("Geri", "Admin")
+        </div>
+    </div>
+</body>
+</html>
+
+
+

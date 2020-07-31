@@ -28,6 +28,7 @@
 
         .header {
             height: 350px;
+            flex-direction: row
         }
 
         .weatherInfoHeader {
@@ -48,35 +49,44 @@
 </head>
 <body>
     <div id="main">
+
         <div class="header">
-            <h1 style="padding:50px 50px 0px 50px;color:white"><img src="~/assests/pin.png" style="height:50px;width:50px" />@Model[0].CityName</h1>
-            <h3 style="color:white;margin-left:50px">@Model[0].WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h3>
-            @if (Model[0].MainStatus == "Güneşli")
-            {
-                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C </h3>
-                <img src="~/assests/sunny.gif" style="height:180px;width:200px;margin-left:50px" />
-            }
-            else if (Model[0].MainStatus == "Açık")
-            {
-                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                <img src="~/assests/acik.gif" style="height:113px;width:200px;margin-left:50px" />
-            }
-            else if (Model[0].MainStatus == "Parçalı Bulutlu")
-            {
-                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                <img src="~/assests/parcali-bulut.gif" style="height:112px;width:216px;margin-left:50px" />
-            }
-            else if (Model[0].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
-            {
-                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                <img src="~/assests/bolgesel-duzensiz.gif" style="height:190px;width:176px;margin-left:50px" />
-            }
-            else if (Model[0].MainStatus == "Sisli")
-            {
-                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                <img src="~/assests/sisli.gif" style="height:146px;width:300px;margin-left:50px" />
-            }
+            <div style="float:left">
+                <h1 style="padding:50px 50px 0px 50px;color:white"><img src="~/assests/pin.png" style="height:50px;width:50px" />@Model[0].CityName</h1>
+                <h3 style="color:white;margin-left:50px">@Model[0].WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h3>
+                @if (Model[0].MainStatus == "Güneşli")
+                {
+                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C </h3>
+                    <img src="~/assests/sunny.gif" style="height:180px;width:200px;margin-left:50px" />
+                }
+                else if (Model[0].MainStatus == "Açık")
+                {
+                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                    <img src="~/assests/acik.gif" style="height:113px;width:200px;margin-left:50px" />
+                }
+                else if (Model[0].MainStatus == "Parçalı Bulutlu")
+                {
+                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                    <img src="~/assests/parcali-bulut.gif" style="height:112px;width:216px;margin-left:50px" />
+                }
+                else if (Model[0].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
+                {
+                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                    <img src="~/assests/bolgesel-duzensiz.gif" style="height:190px;width:176px;margin-left:50px" />
+                }
+                else if (Model[0].MainStatus == "Sisli")
+                {
+                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                    <img src="~/assests/sisli.gif" style="height:146px;width:300px;margin-left:50px" />
+                }
+            </div>
+            <div style="float:right">
+                <h2 style="color:white">Buraya çizgisel grafik gelecek</h2>
+            </div>
+
         </div>
+
+
         <div class="weatherInfoHeader">
             <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
             <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>

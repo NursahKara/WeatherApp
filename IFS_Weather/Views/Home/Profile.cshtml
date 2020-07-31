@@ -3,128 +3,124 @@
 @{
     ViewBag.Title = "Profile";
 }
+<!DOCTYPE html>
+<html>
+<head>
 
-<h2>Profile</h2>
-
-<table class="table">
-    <tr>
-        <th>
-            Username
-        </th>
-        <th>
-            Password
-        </th>
-        <th>
-            Name
-        </th>
-        <th>
-            DefaultCityName
-        </th>
-        <th></th>
-    </tr>
-    <tr>
-        <td>
-            @Model.Username
-        </td>
-        <td>
-            @Model.Password
-        </td>
-        <td>
-            @Model.Name
-        </td>
-        <td>
-            @Model.DefaultCityName
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "EditProfile", new { id = Model.UserId })
-        </td>
-    </tr>
-
-</table>
-
-@*<a class="nav-link" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modalchangecity">Şehir Değiştir</a>*@
-<style>
-    .button {
-        position: relative;
-        background-color: darkviolet;
-        border: none;
-        font-size: 12px;
-        color: #FFFFFF;
-        padding: 10px;
-        width: 100px;
-        text-align: center;
-        transition-duration: 0.4s;
-        text-decoration: none;
-        overflow: hidden;
-        cursor: pointer;
-        border-radius: 18px;
-        margin-bottom: 8px
-    }
-
-        .button:after {
-            content: "";
-            background: black;
-            display: block;
-            position: absolute;
-            padding-top: 300%;
-            padding-left: 350%;
-            margin-left: -20px !important;
-            margin-top: -120%;
-            opacity: 0;
-            transition: all 0.8s
+    <title></title>
+    <style>
+        body {
+            background-image: url(../../assests/blur.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
         }
 
-        .button:active:after {
-            padding: 0;
-            margin: 0;
-            opacity: 1;
-            transition: 0s
+        #main {
+            height: 600px;
+            width: 1200px;
+            background-image: url(../../assests/manzara.jpg);
+            border-radius: 15px;
+            margin: 30px auto auto auto;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-color: black;
+            border-width: 20px;
+            justify-content: flex-end;
+            align-items: flex-end;
+            vertical-align: bottom
         }
-</style>
 
-<!-- Modal change city -->
-<div class="modal fade" style="margin-top:40px;" id="modalchangecity" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background:url(../../assests/sky.jpg);background-size:cover;background-repeat:no-repeat;">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="color:black">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @using (Html.BeginForm("Profile", "Home", FormMethod.Post))
-                {
-                    <form>
-                        <center>
-                            <select name="DefaultCityName" class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray" type="button" required>
-                                <option value="">Şehir Seçin</option>
-                                <option value="istanbul">İstanbul</option>
-                                <option value="izmir">İzmir</option>
-                                <option value="ankara">Ankara</option>
-                                <option value="sakarya">Sakarya</option>
-                            </select>
-                            <br />
-                            <button style="align-items:flex-start;margin-top:5px;color:white" class="button" type="submit">@Html.ActionLink("Değiştir", "Profile")</button>
+        .header {
+            height: 350px;
+        }
+
+        .weatherInfoHeader {
+            height: 50px;
+            padding-left: 5px;
+            padding-top: 210px
+        }
+
+        .weatherinfo {
+            height: 200px;
+            width: 1200px;
+            background-color: black;
+            opacity: 0.5;
+            border-radius: 0 0 15px 15px;
+            flex-direction: row;
+        }
+
+        .profile-card {
+            padding-top: 30px;
+            width: 800px
+        }
+
+        .profile-info {
+            width: 800px
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div class="header">
+            <center>
+                <div class="profile-card">
+
+                    <img src="~/assests/man.png" style="height:100px;width:100px;margin-bottom:30px" />
 
 
-                            <br />
-                            <span style="color:red;justify-content:center">
-                                @ViewBag.LoginError
-                            </span>
-                        </center>
-                    </form>
-                }
+                    <table class="table">
+                        <tr>
+                            <th style="color:white">
+                                Kullanıcı Adı
+                            </th>
+                            <th style="color:white">
+                                @Model.Username
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="color:white">
+                                Ad-Soyad
+                            </th>
+                            <th style="color:white">
+                                @Model.Name
+                            </th>
 
-            </div>
+                        </tr>
+                        <tr>
+                            <th style="color:white">
+                                Şifre
+                            </th>
+                            <th style="color:white">
+                                **************
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <th style="color:white">
+                                Şehir
+                            </th>
+                            <th style="color:white">
+                                @Model.DefaultCityName
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+                <input type="submit" value="Bilgileri Güncelle" class="btn btn-default" />
+
+            </center>
+
+
+        </div>
+        <div class="weatherInfoHeader">
+            <a href="LogOut" style="color: white;margin-left: 20px;margin-right: 20px;text-decoration: none;float: right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+            <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right">
+                <img src="~/assests/man.png" style="        height: 20px;
+        width: 20px;" />Profil
+            </a>
+            <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
         </div>
     </div>
-</div>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-actions no-color">
-        @Html.ActionLink("Geri", "Index")
-    </div>
-}
+</body>
+</html>
 

@@ -3,69 +3,92 @@
 @{
     ViewBag.Title = "Index";
 }
-<h2>Veritabanına Aktarım</h2>
-<br />
-<button>@Html.ActionLink("Verileri Çek", "UpdateWeatherInfo")</button>
-<br />
-<hr />
-<h2>Kullanıcı Yönetimi</h2>
-<br />
-<p>
-    @Html.ActionLink("Kullanıcı Ekle", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Username)
-        </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DefaultCityName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DefaultCityName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
-            </td>
-        </tr>
-    }
 
-</table>
 
-<hr />
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+        body {
+            background-image: url(../../assests/blur.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+        }
+
+        #main {
+            height: auto;
+            width: 1200px;
+            background-image: url(../../assests/manzara.jpg);
+            border-radius: 15px;
+            margin: 30px auto auto auto;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-color: black;
+            border-width: 20px;
+            justify-content: flex-end;
+            align-items: flex-end;
+            vertical-align: bottom
+        }
+
+        .header {
+            height: 350px;
+            padding: 30px
+        }
+
+        .weatherInfoHeader {
+            height: 50px;
+            padding-left: 5px;
+            padding-top: 20px
+        }
+
+        .weatherinfo {
+            height: 200px;
+            width: 1200px;
+            opacity: 0.5;
+            border-radius: 0 0 15px 15px;
+            flex-direction: row;
+        }
+          .parent-style-one a {
+            text-decoration: none;
+            color: black
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="color: white">Admin</h1>
+        <hr />
+        <h2 style="color:white">Veritabanına Aktarım</h2>
+        <div class="parent-style-one">
+            <button>@Html.ActionLink("Verileri Çek", "UpdateWeatherInfo")</button>
+        </div>
+        <h2 style="color:white;text-decoration:none">Kullanıcı Yönetimi</h2>
+        <div class="parent-style-one">
+            <button>@Html.ActionLink("Kullanıcı Yönetimi", "UserManagement")</button>
+        </div>
+        <h2 style="color:white;text-decoration:none">Hava Durumu Yönetimi</h2>
+
+        <div class="parent-style-one">
+
+            <button>@Html.ActionLink("Hava Durumu Yönetimi", "UserManagement")</button>
+        </div>
+
+
+
+        <br />
+
+        <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+        <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
+        <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+
+
+    </div>
+
+</body>
+</html>
+
+
 

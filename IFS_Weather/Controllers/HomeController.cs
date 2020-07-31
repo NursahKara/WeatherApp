@@ -342,5 +342,9 @@ namespace IFS_Weather.Controllers
             }
             return View(userModel);
         }
+        public ActionResult UserManagement()
+        {
+            return View(db.Users.ToList());
+        }
     }
 }
