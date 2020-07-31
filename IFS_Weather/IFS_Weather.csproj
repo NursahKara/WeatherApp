@@ -156,8 +156,21 @@
     <Compile Include="Providers\UserRoleProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assests\acik.gif" />
+    <Content Include="assests\blur.png" />
+    <Content Include="assests\bolgesel-duzensiz.gif" />
     <Content Include="assests\favicon.ico" />
+    <Content Include="assests\home-blue.png" />
+    <Content Include="assests\logout-red.png" />
+    <Content Include="assests\man.png" />
+    <Content Include="assests\manzara.jpg" />
+    <Content Include="assests\parcali-bulut.gif" />
+    <Content Include="assests\pin.png" />
+    <Content Include="assests\plus.png" />
+    <Content Include="assests\rainy.gif" />
+    <Content Include="assests\sisli.gif" />
     <Content Include="assests\sky.jpg" />
+    <Content Include="assests\sunny.gif" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -338,6 +351,11 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\Admin.cshtml" />
     <Content Include="Views\Home\Profile.cshtml" />
+    <Content Include="Views\Home\Create.cshtml" />
+    <Content Include="Views\Home\Delete.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
+    <Content Include="Views\Home\Edit.cshtml" />
+    <Content Include="Views\Home\EditProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -3,48 +3,124 @@
 <html>
 <head>
     <title></title>
-   
+    <style>
+        body {
+            background-image: url(../../assests/blur.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+        }
+
+        #main {
+            height: 600px;
+            width: 1200px;
+            background-image: url(../../assests/manzara.jpg);
+            border-radius: 15px;
+            margin: 30px auto auto auto;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-color: black;
+            border-width: 20px;
+            justify-content: flex-end;
+            align-items: flex-end;
+            vertical-align: bottom
+        }
+
+        .header {
+            height: 350px;
+        }
+
+        .weatherInfoHeader {
+            height: 50px;
+            padding-left: 5px;
+            padding-top: 20px
+        }
+
+        .weatherinfo {
+            height: 200px;
+            width: 1200px;
+            background-color: black;
+            opacity: 0.5;
+            border-radius: 0 0 15px 15px;
+            flex-direction: row;
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar navbar-light navbar-fixed-top">
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a href="Index" style="color: black;">Ana Sayfa <span class="sr-only">(current)</span></a>
-                </li>
-                <li>
-                    <a href="Profile" style="color:black;">Profil</a>
-                </li>
-                <li>
-                    <a href="LogOut" style="color:black">Çıkış Yap</a>
-                </li>
-            </ul>
+    <div id="main">
+        <div class="header">
+            <h1 style="padding:50px 50px 0px 50px;color:white"><img src="~/assests/pin.png" style="height:50px;width:50px" />@Model[0].CityName</h1>
+            <h3 style="color:white;margin-left:50px">@Model[0].WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h3>
+            @if (Model[0].MainStatus == "Güneşli")
+            {
+                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C </h3>
+                <img src="~/assests/sunny.gif" style="height:180px;width:200px;margin-left:50px" />
+            }
+            else if (Model[0].MainStatus == "Açık")
+            {
+                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                <img src="~/assests/acik.gif" style="height:113px;width:200px;margin-left:50px" />
+            }
+            else if (Model[0].MainStatus == "Parçalı Bulutlu")
+            {
+                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                <img src="~/assests/parcali-bulut.gif" style="height:112px;width:216px;margin-left:50px" />
+            }
+            else if (Model[0].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
+            {
+                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                <img src="~/assests/bolgesel-duzensiz.gif" style="height:190px;width:176px;margin-left:50px" />
+            }
+            else if (Model[0].MainStatus == "Sisli")
+            {
+                <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
+                <img src="~/assests/sisli.gif" style="height:146px;width:300px;margin-left:50px" />
+            }
+        </div>
+        <div class="weatherInfoHeader">
+            <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+            <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
+            <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+
+        </div>
+        <div class="weatherinfo">
+            @foreach (var item in Model)
+            {
+                <div style="width: 200px; height: 200px; float: left;">
+                    <h2 style="color:white;margin-left:5px">@item.CityName</h2>
+                    <h5 style="color:white;margin-left:5px">@item.WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h5>
+                    <h5 style="color:white;margin-left:5px">@item.MainStatus</h5>
+                    <div>
+                        <div style="float:left;">
+                            @if (item.MainStatus == "Güneşli")
+                            {
+                                <img src="~/assests/sunny.gif" style="height:64px;width:64px;margin-left:5px" />
+                            }
+                            else if (item.MainStatus == "Açık")
+                            {
+                                <img src="~/assests/acik.gif" style="height:64px;width:64px;margin-left:5px" />
+                            }
+                            else if (item.MainStatus == "Parçalı Bulutlu")
+                            {
+                                <img src="~/assests/parcali-bulut.gif" style="height: 64px;width: 64px;margin-left: 5px" />
+                            }
+                            else if (item.MainStatus == "Bölgesel düzensiz yağmur yağışlı")
+                            {
+                                <img src="~/assests/bolgesel-duzensiz.gif" style="height:64px;width:64px;margin-left:5px" />
+                            }
+                            else if (item.MainStatus == "Sisli")
+                            {
+                                <img src="~/assests/sisli.gif" style="height:64px;width:64px;margin-left:5px" />
+                            }
+                        </div>
+                        <div style="float:left;margin-left:20px">
+                            <h3 style="color:white;margin-left:5px">@item.Temperature °C</h3>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
-    <div style="background-color:#d8d5d5;height:auto;width:650px;border-radius:25px;padding:15px">
-        @* @Model[0].CityName*@
-        @foreach (var item in Model)
-        {
-
-            <h2>@item.CityName</h2>
-            <h5>@item.WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h5>
-            <h5>@item.MainStatus</h5>
-            <div>
-                <div style="float:left;">
-                    <img src="@item.IconPath" style="border-radius:8px" />
-                </div>
-                <div style="float:left;margin-left:20px">
-                    <h3>@item.Temperature °C</h3>
-                </div>
-            </div>
-            <br /><br /><br />
-            <hr />
-
-        }
-    </div>
-
-
-
 </body>
 </html>
 

@@ -6,47 +6,80 @@
 
 <h2>Profile</h2>
 
-@Model.Username
-@Model.Name
-@Model.DefaultCityName
-<a class="nav-link" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modalchangecity">Şehir Değiştir</a>
+<table class="table">
+    <tr>
+        <th>
+            Username
+        </th>
+        <th>
+            Password
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            DefaultCityName
+        </th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>
+            @Model.Username
+        </td>
+        <td>
+            @Model.Password
+        </td>
+        <td>
+            @Model.Name
+        </td>
+        <td>
+            @Model.DefaultCityName
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditProfile", new { id = Model.UserId })
+        </td>
+    </tr>
+
+</table>
+
+@*<a class="nav-link" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modalchangecity">Şehir Değiştir</a>*@
 <style>
-     .button {
-            position: relative;
-            background-color: darkviolet;
-            border: none;
-            font-size: 12px;
-            color: #FFFFFF;
-            padding: 10px;
-            width: 100px;
-            text-align: center;
-            transition-duration: 0.4s;
-            text-decoration: none;
-            overflow: hidden;
-            cursor: pointer;
-            border-radius: 18px;
-            margin-bottom: 8px
+    .button {
+        position: relative;
+        background-color: darkviolet;
+        border: none;
+        font-size: 12px;
+        color: #FFFFFF;
+        padding: 10px;
+        width: 100px;
+        text-align: center;
+        transition-duration: 0.4s;
+        text-decoration: none;
+        overflow: hidden;
+        cursor: pointer;
+        border-radius: 18px;
+        margin-bottom: 8px
+    }
+
+        .button:after {
+            content: "";
+            background: black;
+            display: block;
+            position: absolute;
+            padding-top: 300%;
+            padding-left: 350%;
+            margin-left: -20px !important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s
         }
 
-            .button:after {
-                content: "";
-                background: black;
-                display: block;
-                position: absolute;
-                padding-top: 300%;
-                padding-left: 350%;
-                margin-left: -20px !important;
-                margin-top: -120%;
-                opacity: 0;
-                transition: all 0.8s
-            }
-
-            .button:active:after {
-                padding: 0;
-                margin: 0;
-                opacity: 1;
-                transition: 0s
-            }
+        .button:active:after {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s
+        }
 </style>
 
 <!-- Modal change city -->
@@ -86,5 +119,12 @@
         </div>
     </div>
 </div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
+    <div class="form-actions no-color">
+        @Html.ActionLink("Geri", "Index")
+    </div>
+}
 

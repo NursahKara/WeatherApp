@@ -1,7 +1,71 @@
-﻿
-@{
-    ViewBag.Title = "Admin";
-}
+﻿@model IEnumerable<IFS_Weather.Models.UserModel>
 
-<h2>Admin</h2>
-<button>@Html.ActionLink("Verileri Çek","UpdateWeatherInfo")</button>
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Veritabanına Aktarım</h2>
+<br />
+<button>@Html.ActionLink("Verileri Çek", "UpdateWeatherInfo")</button>
+<br />
+<hr />
+<h2>Kullanıcı Yönetimi</h2>
+<br />
+<p>
+    @Html.ActionLink("Kullanıcı Ekle", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DefaultCityName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DefaultCityName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<hr />
+
