@@ -11,8 +11,9 @@ using System.Web.Security;
 using DevOne.Security.Cryptography.BCrypt;
 using System.Net;
 using System.Data.Entity;
+using System.Diagnostics;
+using System.Data;
 using Newtonsoft.Json;
-using System.Dynamic;
 
 namespace IFS_Weather.Controllers
 {
@@ -42,118 +43,30 @@ namespace IFS_Weather.Controllers
                 return View(vm);
             }
         }
-        [Authorize(Roles="Yönetici")]
-        public ActionResult AdminIndex()
-        {
-            return View();
-        }
         [Authorize(Roles = "Yönetici")]
         public ActionResult Admin()
         {
-            using (var ctx = new IFSAppContext())
-            {
-                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
-                return View(ctx.Users.ToList());
-            }
-
-        }
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserModel userModel = db.Users.Find(id);
-            if (userModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userModel);
-        }
-        public ActionResult Create()
-        {
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserId,Username,Password,Name,UserType,DefaultCityName,Status")] UserModel userModel)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Users.Add(userModel);
-                db.SaveChanges();
-                return RedirectToAction("Admin");
-            }
-
-            return View(userModel);
-        }
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserModel userModel = db.Users.Find(id);
-            if (userModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userModel);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,Username,Password,Name,UserType,DefaultCityName,Status")] UserModel userModel)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(userModel).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Admin");
-            }
-            return View(userModel);
-        }
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserModel userModel = db.Users.Find(id);
-            if (userModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userModel);
-        }
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            UserModel userModel = db.Users.Find(id);
-            db.Users.Remove(userModel);
-            db.SaveChanges();
-            return RedirectToAction("Admin");
-        }
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-       
-        public async Task<ActionResult> Profile()
+        public new ActionResult Profile()
         {
             using (var ctx = new IFSAppContext())
             {
                 var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
-                return View(user);
+                var profile = new RegisterModel()
+                {
+                    DefaultCityName = user.DefaultCityName,
+                    Name = user.Name,
+                    Username = user.Username
+                };
+                return View(profile);
             }
         }
         [AllowAnonymous]
         public ActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index");
             return View();
         }
         [AllowAnonymous]
@@ -183,7 +96,6 @@ namespace IFS_Weather.Controllers
                         ctx.SaveChanges();
                         return RedirectToAction("Index");
                     }
-                  
                     ViewBag.LoginError = "Kullanıcı adı ya da şifre yanlış!";
                     return View();
                 }
@@ -222,6 +134,20 @@ namespace IFS_Weather.Controllers
                     return RedirectToAction("Login");
                 }
             }
+        }
+        [HttpPost]
+        public ActionResult EditProfile(RegisterModel model)
+        {
+            using (var ctx = new IFSAppContext())
+            {
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
+                user.DefaultCityName = model.DefaultCityName ?? user.DefaultCityName;
+                user.Name = model.Name ?? user.Name;
+                user.Username = model.Username ?? user.Username;
+                user.Password = model.Password != null ? BCryptHelper.HashPassword(model.Password, BCryptHelper.GenerateSalt(12)) : user.Password;
+                ctx.SaveChanges();
+            }
+            return RedirectToAction("Profile");
         }
         public ActionResult LogOut()
         {
@@ -276,94 +202,9 @@ namespace IFS_Weather.Controllers
             }
             return RedirectToAction("Admin");
         }
-        public async Task<ActionResult> DeleteUser()
-        {
-            return View();
-        }
-        
-        [HttpPost]
-        public async Task<ActionResult> DeleteUser(string model)
-        {
-            using (var ctx = new IFSAppContext())
-            {
-                var u = ctx.Users.FirstOrDefault(w => w.Username == (object)model);
-
-                if (u != null)
-                {
-                    ctx.Users.Remove(u);
-                    ctx.SaveChanges();
-                    return RedirectToAction("Admin");
-                }
-                else
-                {
-                    return View();
-                }
-            }
-        }
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult AddNewUser(RegisterModel model)
-        {
-            if (model == null)
-            {
-                ViewBag.LoginError = "Hatalı kullanıcı adı ya da şifre!";
-                return RedirectToAction("Admin");
-            }
-            else
-            {
-                using (var ctx = new IFSAppContext())
-                {
-                    var u = ctx.Users.Where(w => w.Username == model.Username).SingleOrDefault();
-                    if (u != null)
-                    {
-                        ViewBag.RegisterError = "Kullanıcı adı mevcut";
-                        return RedirectToAction("Admin");
-                    }
-                    UserModel user = new UserModel()
-                    {
-                        DefaultCityName = model.DefaultCityName,
-                        Name = model.Name,
-                        Username = model.Username,
-                        Password = BCryptHelper.HashPassword(model.Password, BCryptHelper.GenerateSalt(12)),
-                        UserType = "Son Kullanıcı",
-                        Status = 1,
-                    };
-                    ctx.Users.Add(user);
-                    ctx.SaveChanges();
-                    return RedirectToAction("Admin");
-                }
-            }
-        }
-        public ActionResult EditProfile(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserModel userModel = db.Users.Find(id);
-            if (userModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userModel);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditProfile([Bind(Include = "UserId,Username,Password,Name,UserType,DefaultCityName,Status")] UserModel userModel)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(userModel).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Profile");
-            }
-            return View(userModel);
-        }
         public ActionResult UserManagement()
         {
             return View(db.Users.ToList());
         }
-       
-      
     }
 }

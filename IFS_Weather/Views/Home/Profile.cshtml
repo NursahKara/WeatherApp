@@ -1,4 +1,4 @@
-﻿@model IFS_Weather.Models.UserModel
+﻿@model IFS_Weather.Models.RegisterModel
 
 @{
     ViewBag.Title = "Profile";
@@ -9,6 +9,7 @@
 
     <title></title>
     <style>
+
         body {
             background-image: url(../../assests/blur.png);
             background-size: cover;
@@ -89,15 +90,6 @@
                         </tr>
                         <tr>
                             <th style="color:white">
-                                Şifre
-                            </th>
-                            <th style="color:white">
-                                **************
-                            </th>
-
-                        </tr>
-                        <tr>
-                            <th style="color:white">
                                 Şehir
                             </th>
                             <th style="color:white">
@@ -106,31 +98,28 @@
                         </tr>
                     </table>
                 </div>
-                <a class="btn btn-default" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modalmanagement">Bilgileri Güncelle</a>
-                
+                <a class="btn btn-default" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modalmanagement">Bilgileri güncelle</a>
 
             </center>
+
+
         </div>
         <div class="weatherInfoHeader">
             <a href="LogOut" style="color: white;margin-left: 20px;margin-right: 20px;text-decoration: none;float: right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
             <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right">
-                <img src="~/assests/man.png" style="height: 20px;width: 20px;" />Profil
+                <img src="~/assests/man.png" style="        height: 20px;
+        width: 20px;" />Profil
             </a>
             <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
-            @if (User.IsInRole("Yönetici"))
-            {
-                <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>
-            }
         </div>
     </div>
-
-    <!-- Modal üyeol -->
     <div class="modal fade" style="margin-top:40px;" id="modalmanagement" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="background:url(../../assests/sky.jpg);background-size:cover;background-repeat:no-repeat;">
                 <div class="modal-header">
                     <center>
                         <img src="~/images/avatar.png" style="border-radius:50%;z-index: 9;margin-top: -40px; width:100px; height:100px;" />
+
                     </center>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" style="color:black">&times;</span>
@@ -140,16 +129,15 @@
                     </center>
                 </div>
                 <div class="modal-body">
-                    @using (Html.BeginForm("Register", "Home", FormMethod.Post))
+                    @using (Html.BeginForm("EditProfile", "Home", FormMethod.Post))
                     {
                         <form>
                             <center>
-                                <input type="text" style="border:none; width:100%" name="Name" placeholder="İsim" required />
+                                <input type="text" style="border:none; width:100%" name="Name" placeholder="İsim" />
                                 <br />
-                                <input type="password" style="border:none;width:100%" name="Password" placeholder="Parola" required />
+                                <input type="password" style="border:none;width:100%" name="Password" placeholder="Parola" />
                                 <br />
-                               
-                                <select name="DefaultCityName" class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray" type="button" required>
+                                <select name="DefaultCityName" class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray" type="button">
                                     <option value="">Şehir Seçin</option>
                                     <option value="istanbul">İstanbul</option>
                                     <option value="izmir">İzmir</option>
@@ -157,14 +145,10 @@
                                     <option value="sakarya">Sakarya</option>
                                 </select>
                                 <br />
-                                <button style="align-items:flex-start;margin-top:5px" class="button" type="submit">Bilgileri Güncelle</button>
+                                <button style="align-items:flex-start;margin-top:5px" class="button" type="submit">Kaydet</button>
                                 <br />
-                                <span style="color:red;justify-content:center">
-                                    @ViewBag.LoginError
-                                </span>
                             </center>
-                        </form>
-                    }
+                        </form>}
 
                 </div>
             </div>
@@ -172,4 +156,3 @@
     </div>
 </body>
 </html>
-
