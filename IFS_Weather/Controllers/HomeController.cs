@@ -11,6 +11,8 @@ using System.Web.Security;
 using DevOne.Security.Cryptography.BCrypt;
 using System.Net;
 using System.Data.Entity;
+using Newtonsoft.Json;
+using System.Dynamic;
 
 namespace IFS_Weather.Controllers
 {
@@ -19,18 +21,41 @@ namespace IFS_Weather.Controllers
     {
         private IFSAppContext db = new IFSAppContext();
         private static readonly HttpClient client = new HttpClient();
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             using (var ctx = new IFSAppContext())
             {
-                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();   //forms authentication identity.name i yani benzersiz olan kullanıcı adını tutuyor. kullanıcı adı cookie de tutulan bilgi    
-                return View(ctx.WeatherInfos.Where(w => w.CityName == user.DefaultCityName).ToList());  //defaultcityname in verilerini getir ve geçmiş veriler gelmesin
-                /////&& w.WeatherDate.Date.Day >= DateTime.Now.Date.Day
+                var vm = new IndexViewModel();
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();   //forms authentication identity.name i yani benzersiz olan kullanıcı adını tutuyor. kullanıcı adı cookie de tutulan bilgi
+                var dateTimeNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                vm.WeatherModels = ctx.WeatherInfos.Where(w => w.CityName == user.DefaultCityName && w.WeatherDate >= dateTimeNow).ToList();
+                var dataPoints = new List<DataPoint>();
+                foreach (var item in vm.WeatherModels)
+                {
+                    dataPoints.Add(new DataPoint(item.WeatherDate, item.Temperature));
+                }
+                JsonSerializerSettings _jsonSetting = new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+                vm.DataPoints = JsonConvert.SerializeObject(dataPoints, _jsonSetting);
+                return View(vm);
             }
         }
+        [Authorize(Roles="Yönetici")]
         public ActionResult AdminIndex()
         {
-            return View(db.Users.ToList());
+            return View();
+        }
+        [Authorize(Roles = "Yönetici")]
+        public ActionResult Admin()
+        {
+            using (var ctx = new IFSAppContext())
+            {
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
+                return View(ctx.Users.ToList());
+            }
+
         }
         public ActionResult Details(int? id)
         {
@@ -117,16 +142,7 @@ namespace IFS_Weather.Controllers
             }
             base.Dispose(disposing);
         }
-        [Authorize(Roles = "Yönetici")]
-        public ActionResult Admin()
-        {
-            using (var ctx = new IFSAppContext())
-            {
-                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
-                return View(ctx.Users.ToList());
-            }
-
-        }
+       
         public async Task<ActionResult> Profile()
         {
             using (var ctx = new IFSAppContext())
@@ -167,6 +183,7 @@ namespace IFS_Weather.Controllers
                         ctx.SaveChanges();
                         return RedirectToAction("Index");
                     }
+                  
                     ViewBag.LoginError = "Kullanıcı adı ya da şifre yanlış!";
                     return View();
                 }
@@ -237,8 +254,8 @@ namespace IFS_Weather.Controllers
                             WeatherDate = DateTime.Parse(w.SelectToken("date").ToString()),
                             CityName = responseJson.SelectToken("data").SelectToken("request")[0].SelectToken("query").ToString().Split(',')[0],
                             Temperature = (int)w.SelectToken("avgtempC"),
-                            MainStatus = w.SelectToken("hourly")[0].SelectToken("lang_tr")[0].SelectToken("value").ToString(),
-                            IconPath = w.SelectToken("hourly")[0].SelectToken("weatherIconUrl")[0].SelectToken("value").ToString()
+                            MainStatus = w.SelectToken("hourly")[4].SelectToken("lang_tr")[0].SelectToken("value").ToString(),
+                            IconPath = w.SelectToken("hourly")[4].SelectToken("weatherIconUrl")[0].SelectToken("value").ToString()
                         };
                         bool isExists = ctx.WeatherInfos.Where(x => x.WeatherDate == wm.WeatherDate && x.CityName == wm.CityName).FirstOrDefault() != null;
                         if (!isExists)
@@ -346,5 +363,7 @@ namespace IFS_Weather.Controllers
         {
             return View(db.Users.ToList());
         }
+       
+      
     }
 }

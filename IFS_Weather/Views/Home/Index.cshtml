@@ -1,9 +1,10 @@
-﻿@model List<IFS_Weather.Models.WeatherModel>
+﻿@model IFS_Weather.Models.IndexViewModel
 <!DOCTYPE html>
 <html>
 <head>
     <title></title>
     <style>
+
         body {
             background-image: url(../../assests/blur.png);
             background-size: cover;
@@ -34,7 +35,7 @@
         .weatherInfoHeader {
             height: 50px;
             padding-left: 5px;
-            padding-top: 20px
+            padding-top: 20px;
         }
 
         .weatherinfo {
@@ -46,91 +47,149 @@
             flex-direction: row;
         }
     </style>
+    <script>
+    window.onload = function () {
+            var dataPoints = [];
+
+            var jsonString = "@Model.DataPoints";
+            jsonString = jsonString.replace(/&quot;/g, '\"');
+            var json = JSON.parse(jsonString);
+            for (var i = 0; i < json.length; i++) {
+                dataPoints.push({
+                    x: new Date(json[i].x),
+                    y: json[i].y
+                });
+            }
+            console.log(dataPoints);
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                backgroundColor:"",
+                theme: "dark2",
+                title: {
+                    text: "Haftalık Hava Durumu"
+                },
+                axisX: {
+                    valueFormatString: "DD/MM",
+                    crosshair: {
+                        enabled: true,
+                        snapToDataPoint: true
+                    }
+                },
+                axisY: {
+                    title: "Sıcaklık",
+                    includeZero: true,
+                    crosshair: {
+                        enabled: true
+                    },
+                    interval: 2,
+                    minimum: 20
+                },
+                toolTip: {
+                    shared: true
+                },
+                data: [{
+
+                    type: "line",
+                    showInLegend: true,
+                    name: "Sıcaklık",
+                    markerType: "square",
+                    xValueFormatString: "DD MMM, YYYY",
+                    color: "#FFFFFF",
+                    dataPoints: dataPoints
+                }]
+            });
+            chart.render();
+            }
+    </script>
+    <script src="~/js/canvasjs.min.js"></script>
 </head>
 <body>
-    <div id="main">
-
-        <div class="header">
-            <div style="float:left">
-                <h1 style="padding:50px 50px 0px 50px;color:white"><img src="~/assests/pin.png" style="height:50px;width:50px" />@Model[0].CityName</h1>
-                <h3 style="color:white;margin-left:50px">@Model[0].WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h3>
-                @if (Model[0].MainStatus == "Güneşli")
-                {
-                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C </h3>
-                    <img src="~/assests/sunny.gif" style="height:180px;width:200px;margin-left:50px" />
-                }
-                else if (Model[0].MainStatus == "Açık")
-                {
-                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                    <img src="~/assests/acik.gif" style="height:113px;width:200px;margin-left:50px" />
-                }
-                else if (Model[0].MainStatus == "Parçalı Bulutlu")
-                {
-                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                    <img src="~/assests/parcali-bulut.gif" style="height:112px;width:216px;margin-left:50px" />
-                }
-                else if (Model[0].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
-                {
-                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                    <img src="~/assests/bolgesel-duzensiz.gif" style="height:190px;width:176px;margin-left:50px" />
-                }
-                else if (Model[0].MainStatus == "Sisli")
-                {
-                    <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model[0].MainStatus | @Model[0].Temperature °C</h3>
-                    <img src="~/assests/sisli.gif" style="height:146px;width:300px;margin-left:50px" />
-                }
-            </div>
-            <div style="float:right">
-                <h2 style="color:white">Buraya çizgisel grafik gelecek</h2>
-            </div>
-
-        </div>
-
-
-        <div class="weatherInfoHeader">
-            <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
-            <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
-            <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
-
-        </div>
-        <div class="weatherinfo">
-            @foreach (var item in Model)
-            {
-                <div style="width: 200px; height: 200px; float: left;">
-                    <h2 style="color:white;margin-left:5px">@item.CityName</h2>
-                    <h5 style="color:white;margin-left:5px">@item.WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h5>
-                    <h5 style="color:white;margin-left:5px">@item.MainStatus</h5>
-                    <div>
-                        <div style="float:left;">
-                            @if (item.MainStatus == "Güneşli")
-                            {
-                                <img src="~/assests/sunny.gif" style="height:64px;width:64px;margin-left:5px" />
-                            }
-                            else if (item.MainStatus == "Açık")
-                            {
-                                <img src="~/assests/acik.gif" style="height:64px;width:64px;margin-left:5px" />
-                            }
-                            else if (item.MainStatus == "Parçalı Bulutlu")
-                            {
-                                <img src="~/assests/parcali-bulut.gif" style="height: 64px;width: 64px;margin-left: 5px" />
-                            }
-                            else if (item.MainStatus == "Bölgesel düzensiz yağmur yağışlı")
-                            {
-                                <img src="~/assests/bolgesel-duzensiz.gif" style="height:64px;width:64px;margin-left:5px" />
-                            }
-                            else if (item.MainStatus == "Sisli")
-                            {
-                                <img src="~/assests/sisli.gif" style="height:64px;width:64px;margin-left:5px" />
-                            }
-                        </div>
-                        <div style="float:left;margin-left:20px">
-                            <h3 style="color:white;margin-left:5px">@item.Temperature °C</h3>
-                        </div>
-                    </div>
+    @if (Model.WeatherModels.Count > 0)   ///veritabanında veri varsa eğer
+    {
+        <div id="main">
+            <div class="header">
+                <div style="float:left">
+                    <h1 style="padding:50px 50px 0px 50px;color:white"><img src="~/assests/pin.png" style="height:50px;width:50px" />@Model.WeatherModels[0].CityName</h1>
+                    <h3 style="color:white;margin-left:50px">@Model.WeatherModels[0].WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h3>
+                    @if (Model.WeatherModels[0].MainStatus == "Güneşli")
+                    {
+                        <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C </h3>
+                        <img src="~/assests/sunny.gif" style="height:180px;width:200px;margin-left:50px" /> }
+                    else if (Model.WeatherModels[0].MainStatus == "Açık")
+                    {
+                        <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
+                        <img src="~/assests/acik.gif" style="height:113px;width:200px;margin-left:50px" /> }
+                    else if (Model.WeatherModels[0].MainStatus == "Parçalı Bulutlu")
+                    {
+                        <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
+                        <img src="~/assests/parcali-bulut.gif" style="height:112px;width:216px;margin-left:50px" /> }
+                    else if (Model.WeatherModels[0].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
+                    {
+                        <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
+                        <img src="~/assests/bolgesel-duzensiz.gif" style="height:190px;width:176px;margin-left:50px" /> }
+                    else if (Model.WeatherModels[0].MainStatus == "Sisli")
+                    {
+                        <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
+                        <img src="~/assests/sisli.gif" style="height:146px;width:300px;margin-left:50px" />}
                 </div>
-            }
+                <div style="float:right;padding:50px 50px 0 50px">
+                    <div id="chartContainer" style="height: 300px; width: 550px;"></div>
+                </div>
+            </div>
+            <div class="weatherInfoHeader">
+                <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+                <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
+                <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+                @if (User.IsInRole("Yönetici"))
+                {
+                    <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>}
+            </div>
+            <div class="weatherinfo">
+
+                @for (var i = 1; i < Model.WeatherModels.Count; i++)
+                {
+
+                    <div style="width: 200px; height: 200px; float: left;">
+                        <h2 style="color:white;margin-left:5px;">@Model.WeatherModels[i].WeatherDate.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"))</h2>
+                        <h5 style="color:white;margin-left:5px;">@Model.WeatherModels[i].MainStatus</h5>
+                        <div>
+                            <div style="float:left;">
+                                @if (Model.WeatherModels[i].MainStatus == "Güneşli")
+                                {
+                                    <img src="~/assests/sunny.gif" style="height:64px;width:64px;margin-left:5px" /> }
+                                else if (Model.WeatherModels[i].MainStatus == "Açık")
+                                {
+                                    <img src="~/assests/acik.gif" style="height:64px;width:64px;margin-left:5px" /> }
+                                else if (Model.WeatherModels[i].MainStatus == "Parçalı Bulutlu")
+                                {
+                                    <img src="~/assests/parcali-bulut.gif" style="height: 64px;width: 64px;margin-left: 5px" /> }
+                                else if (Model.WeatherModels[i].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
+                                {
+                                    <img src="~/assests/bolgesel-duzensiz.gif" style="height:64px;width:64px;margin-left:5px" /> }
+                                else if (Model.WeatherModels[i].MainStatus == "Sisli")
+                                {
+                                    <img src="~/assests/sisli.gif" style="height:64px;width:64px;margin-left:5px" />}
+                            </div>
+                            <div style="float:left;margin-left:20px">
+                                <h3 style="color:white;margin-left:5px">@Model.WeatherModels[i].Temperature °C</h3>
+                            </div>
+                        </div>
+                    </div>}
+            </div>
         </div>
-    </div>
+    }
+    @if (Model.WeatherModels.Count == 0)
+    {
+        <div id="main">
+            <div class="weatherInfoHeader">
+                <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+                <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
+                <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+                @if (User.IsInRole("Yönetici"))
+                {
+                    <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>}
+            </div>
+        </div>
+    }
 </body>
 </html>
-
