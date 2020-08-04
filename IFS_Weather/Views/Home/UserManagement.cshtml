@@ -11,6 +11,7 @@
 <head>
     <title></title>
     <style>
+
         body {
             background-image: url(../../assests/blur.png);
             background-size: cover;
@@ -64,8 +65,6 @@
         <hr />
         <h2 style="color:white;text-decoration:none">Kullanıcı Yönetimi</h2>
         <br />
-        <button><a href="Create" style="text-decoration:none;color:black">Kullanıcı Ekle</a></button>
-        <br />
         <br />
 
         <table class="table">
@@ -74,8 +73,8 @@
                     @Html.DisplayNameFor(model => model.Username)
                 </th>
                 @*<th>
-                    @Html.DisplayNameFor(model => model.Password)
-                </th>*@
+                        @Html.DisplayNameFor(model => model.Password)
+                    </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
@@ -98,8 +97,8 @@
                         @Html.DisplayFor(modelItem => item.Username)
                     </td>
                     @*<td>
-                        @Html.DisplayFor(modelItem => item.Password)
-                    </td>*@
+                            @Html.DisplayFor(modelItem => item.Password)
+                        </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -114,9 +113,9 @@
                     </td>
                     <td>
                         <div class="parent-style-one">
-                            @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Username }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.Username }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Username })
                         </div>
                     </td>
 
@@ -129,6 +128,3 @@
     </div>
 </body>
 </html>
-
-
-

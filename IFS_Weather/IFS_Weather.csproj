@@ -56,6 +56,12 @@
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.19.7.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess.EntityFramework, Version=6.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.EntityFramework.19.7.0\lib\net45\Oracle.ManagedDataAccess.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -135,7 +141,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\UserModelsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -163,19 +168,31 @@
     <Content Include="assests\acik.gif" />
     <Content Include="assests\blur.png" />
     <Content Include="assests\bolgesel-duzensiz.gif" />
+    <Content Include="assests\cloudy-day-1.svg" />
+    <Content Include="assests\cloudy.svg" />
+    <Content Include="assests\day.svg" />
     <Content Include="assests\favicon.ico" />
     <Content Include="assests\home-blue.png" />
     <Content Include="assests\logout-red.png" />
     <Content Include="assests\man.png" />
     <Content Include="assests\manzara.jpg" />
+    <Content Include="assests\night.svg" />
     <Content Include="assests\parcali-bulut.gif" />
     <Content Include="assests\pin.png" />
     <Content Include="assests\plus.png" />
+    <Content Include="assests\rainy-1.svg" />
     <Content Include="assests\rainy.gif" />
     <Content Include="assests\settings.png" />
     <Content Include="assests\sisli.gif" />
     <Content Include="assests\sky.jpg" />
+    <Content Include="assests\snowy-1.svg" />
     <Content Include="assests\sunny.gif" />
+    <Content Include="assests\sıralama.png" />
+    <Content Include="assests\thunder.svg" />
+    <Content Include="assests\weather-sprite.svg" />
+    <Content Include="assests\weather.svg" />
+    <Content Include="assests\weather_sagittarius.svg" />
+    <Content Include="assests\weather_sunset.svg" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -369,11 +386,6 @@
     <Content Include="Views\Home\DetailsWeather.cshtml" />
     <Content Include="Views\Home\EditWeather.cshtml" />
     <Content Include="Views\Home\WeatherManagement.cshtml" />
-    <Content Include="Views\UserModels\Create.cshtml" />
-    <Content Include="Views\UserModels\Delete.cshtml" />
-    <Content Include="Views\UserModels\Details.cshtml" />
-    <Content Include="Views\UserModels\Edit.cshtml" />
-    <Content Include="Views\UserModels\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

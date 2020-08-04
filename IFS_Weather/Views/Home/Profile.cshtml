@@ -106,11 +106,11 @@
         </div>
         <div class="weatherInfoHeader">
             <a href="LogOut" style="color: white;margin-left: 20px;margin-right: 20px;text-decoration: none;float: right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
-            <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right">
-                <img src="~/assests/man.png" style="        height: 20px;
-        width: 20px;" />Profil
-            </a>
+            <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height: 20px;width: 20px;" />Profil</a>
             <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+            @if (User.IsInRole("Yönetici"))
+            {
+                <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>}
         </div>
     </div>
     <div class="modal fade" style="margin-top:40px;" id="modalmanagement" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

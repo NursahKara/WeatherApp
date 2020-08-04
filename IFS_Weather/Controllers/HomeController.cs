@@ -14,6 +14,8 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Data;
 using Newtonsoft.Json;
+using System.Configuration;
+using Oracle.ManagedDataAccess.Client;
 
 namespace IFS_Weather.Controllers
 {
@@ -22,14 +24,17 @@ namespace IFS_Weather.Controllers
     {
         private IFSAppContext db = new IFSAppContext();
         private static readonly HttpClient client = new HttpClient();
-        public ActionResult Index()
+        private static readonly string apiKey = "ddaa7ce35cb5426c9b2111123202407";
+        private static int attemptCount = 0;
+        private static DateTime lastLoginAttempt;
+        public ActionResult Index(string cityName)
         {
             using (var ctx = new IFSAppContext())
             {
                 var vm = new IndexViewModel();
                 var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();   //forms authentication identity.name i yani benzersiz olan kullanıcı adını tutuyor. kullanıcı adı cookie de tutulan bilgi
                 var dateTimeNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-                vm.WeatherModels = ctx.WeatherInfos.Where(w => w.CityName == user.DefaultCityName && w.WeatherDate >= dateTimeNow).ToList();
+                vm.WeatherModels = ctx.WeatherInfos.Where(w => w.CityName == (cityName ?? user.DefaultCityName) && w.WeatherDate >= dateTimeNow).Take(7).ToList();
                 var dataPoints = new List<DataPoint>();
                 foreach (var item in vm.WeatherModels)
                 {
@@ -52,14 +57,15 @@ namespace IFS_Weather.Controllers
         {
             return View(db.Users.ToList());
         }
-        // GET: UserModels/Details/5
-        public ActionResult Details(int? id)
+        [Authorize(Roles = "Yönetici")]
+        public ActionResult Details(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            UserModel userModel = db.Users.Find(id);
+            UserModel userModel = db.Users.Where(w => w.Username == id).SingleOrDefault();
+            userModel.Password = "";
             if (userModel == null)
             {
                 return HttpNotFound();
@@ -71,30 +77,15 @@ namespace IFS_Weather.Controllers
         {
             return View();
         }
-        // POST: UserModels/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserId,Username,Password,Name,UserType,DefaultCityName,Status")] UserModel userModel)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Users.Add(userModel);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(userModel);
-        }
-        // GET: UserModels/Edit/5
-        public ActionResult Edit(int? id)
+        [Authorize(Roles = "Yönetici")]
+        public ActionResult Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            UserModel userModel = db.Users.Find(id);
+            UserModel userModel = db.Users.Where(w => w.Username == id).SingleOrDefault();
+            userModel.Password = "";
             if (userModel == null)
             {
                 return HttpNotFound();
@@ -102,24 +93,25 @@ namespace IFS_Weather.Controllers
             return View(userModel);
         }
         // POST: UserModels/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Yönetici")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserId,Username,Password,Name,UserType,DefaultCityName,Status")] UserModel userModel)
+        public ActionResult Edit(RegisterModel model)
         {
-            if (ModelState.IsValid)
+            using (var ctx = new IFSAppContext())
             {
-                db.Entry(userModel).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
+                user.DefaultCityName = model.DefaultCityName ?? user.DefaultCityName;
+                user.Name = model.Name ?? user.Name;
+                user.Username = model.Username ?? user.Username;
+                user.Password = model.Password != null ? BCryptHelper.HashPassword(model.Password, BCryptHelper.GenerateSalt(12)) : user.Password;
+                ctx.SaveChanges();
             }
-            return View(userModel);
+            return RedirectToAction("UserManagement");
         }
-        // GET: UserModels/Delete/5
-        public ActionResult Delete(int id)
+        [Authorize(Roles = "Yönetici")]
+        public ActionResult Delete(string id)
         {
-            UserModel userModel = db.Users.Find(id);
+            UserModel userModel = db.Users.Where(w => w.Username == id).SingleOrDefault();
             db.Users.Remove(userModel);
             db.SaveChanges();
             return RedirectToAction("UserManagement");
@@ -154,27 +146,41 @@ namespace IFS_Weather.Controllers
                 ViewBag.LoginError = "Hatalı giriş!";
                 return View();
             }
-            else
+            if (attemptCount > 2)   //3 kez hatalı giriş yaptıktan sonra çalışır
             {
-                using (var ctx = new IFSAppContext())
+                if (!(DateTime.Now - lastLoginAttempt >= TimeSpan.FromMinutes(1)))  //bir dakika geçti mi? sayfa yenilendikten sonra 
                 {
-                    var u = ctx.Users.Where(w => w.Username == model.Username).SingleOrDefault();
-                    if (u != null && BCryptHelper.CheckPassword(model.Password, u.Password))
-                    {
-                        FormsAuthentication.SetAuthCookie(model.Username, false);
-                        ctx.UserLogs.Add(new UserLogModel
-                        {
-                            LogTime = DateTime.Now,
-                            Username = u.Username,
-                            IPAddress = Request.UserHostAddress,
-                            Log = "Kullanıcı giriş yaptı",
-                        });
-                        ctx.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
-                    ViewBag.LoginError = "Kullanıcı adı ya da şifre yanlış!";
+                    ViewBag.LoginError = $"3 kez üst üste hatalı giriş. {(60 - (DateTime.Now - lastLoginAttempt).TotalSeconds).ToString("##")} saniye kaldı";
                     return View();
                 }
+                attemptCount = 0;
+            }
+            using (var ctx = new IFSAppContext())
+            {
+                var u = ctx.Users.Where(w => w.Username == model.Username).SingleOrDefault();
+                if (u != null && BCryptHelper.CheckPassword(model.Password, u.Password))
+                {
+                    FormsAuthentication.SetAuthCookie(model.Username, false);
+                    ctx.UserLogs.Add(new UserLogModel
+                    {
+                        LogTime = DateTime.Now,
+                        Username = u.Username,
+                        IPAddress = Request.UserHostAddress,
+                        Log = "Kullanıcı giriş yaptı",
+                    });
+                    ctx.SaveChanges();
+                    attemptCount = 0;
+                    return RedirectToAction("Index");
+                }
+                attemptCount++;
+                lastLoginAttempt = DateTime.Now;
+                if (attemptCount > 2)
+                {
+                    ViewBag.LoginError = $"3 kez üst üste hatalı giriş. 60 saniye kaldı";
+                    return View();
+                }
+                ViewBag.LoginError = "Kullanıcı adı ya da şifre yanlış!";
+                return View();
             }
         }
         [AllowAnonymous]
@@ -233,7 +239,6 @@ namespace IFS_Weather.Controllers
         [Authorize(Roles = "Yönetici")]
         public async Task<ActionResult> UpdateWeatherInfo()
         {
-            var apiKey = "ddaa7ce35cb5426c9b2111123202407";
             List<string> cities = new List<string>();
             cities.Add("istanbul");
             cities.Add("izmir");
@@ -272,15 +277,38 @@ namespace IFS_Weather.Controllers
                     LogTime = DateTime.Now,
                     Username = user.Username,
                     IPAddress = Request.UserHostAddress,
-                    Log = "yönetici veri çekti"
+                    Log = "Yönetici veri çekti"
                 });
                 ctx.SaveChanges();
             }
             return RedirectToAction("Admin");
         }
-        public ActionResult WeatherManagement()
+        public ActionResult WeatherManagement(string sortOrder, string searchString)
         {
-            return View(db.WeatherInfos.ToList());
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
+            var wi = from w in db.WeatherInfos
+                     select w;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                wi = wi.Where(w => w.CityName.ToUpper().Contains(searchString.ToUpper()) || w.WeatherDate.ToString().Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "Name_desc":
+                    wi = wi.OrderByDescending(w => w.CityName);
+                    break;
+                case "Date":
+                    wi = wi.OrderBy(w => w.WeatherDate);
+                    break;
+                case "Date_desc":
+                    wi = wi.OrderByDescending(w => w.WeatherDate);
+                    break;
+                default:
+                    wi = wi.OrderBy(w => w.CityName);
+                    break;
+            }
+            return View(wi.ToList());
         }
         // GET: WeatherModels/Details/5
         public ActionResult DetailsWeather(int? id)
@@ -302,20 +330,31 @@ namespace IFS_Weather.Controllers
             return View();
         }
         // POST: WeatherModels/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateWeather([Bind(Include = "WeatherId,WeatherDate,CityName,Temperature,MainStatus,IconPath")] WeatherModel weatherModel)
+        [HttpGet]
+        public async Task<ActionResult> CreateWeather(string date, string cityName)
         {
-            if (ModelState.IsValid)
+            var url = $"http://api.worldweatheronline.com/premium/v1/weather.ashx?key={apiKey}&q={cityName}&format=json&date={date}&lang=tr";
+            var responseString = await client.GetStringAsync(url);
+            var responseJson = JObject.Parse(responseString);
+            var weather = responseJson.SelectToken("data").SelectToken("weather")[0];
+            using (var ctx = new IFSAppContext())
             {
-                db.WeatherInfos.Add(weatherModel);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var wm = new WeatherModel()
+                {
+                    WeatherDate = DateTime.Parse(weather.SelectToken("date").ToString()),
+                    CityName = responseJson.SelectToken("data").SelectToken("request")[0].SelectToken("query").ToString().Split(',')[0],
+                    Temperature = (int)weather.SelectToken("avgtempC"),
+                    MainStatus = weather.SelectToken("hourly")[4].SelectToken("lang_tr")[0].SelectToken("value").ToString(),
+                    IconPath = weather.SelectToken("hourly")[4].SelectToken("weatherIconUrl")[0].SelectToken("value").ToString()
+                };
+                bool isExists = ctx.WeatherInfos.Where(x => x.WeatherDate == wm.WeatherDate && x.CityName == wm.CityName).FirstOrDefault() != null;
+                if (!isExists)
+                {
+                    ctx.WeatherInfos.Add(wm);
+                    ctx.SaveChanges();
+                }
+                return RedirectToAction("WeatherManagement");
             }
-
-            return View(weatherModel);
         }
         // GET: WeatherModels/Edit/5
         public ActionResult EditWeather(int? id)
@@ -332,8 +371,6 @@ namespace IFS_Weather.Controllers
             return View(weatherModel);
         }
         // POST: WeatherModels/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditWeather([Bind(Include = "WeatherId,WeatherDate,CityName,Temperature,MainStatus,IconPath")] WeatherModel weatherModel)
@@ -370,6 +407,28 @@ namespace IFS_Weather.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        [HttpGet]
+        [Authorize(Roles = "Yönetici")]
+        [AllowAnonymous]
+        public ActionResult TransferToOracle()
+        {
+            using (OracleConnection cnn = new OracleConnection(ConfigurationManager.ConnectionStrings["oraclecnn"].ConnectionString))
+            {
+                string command = $@"DECLARE
+                                        HEADER_NO_ NUMBER;
+                                    BEGIN
+                                        IFSAPP.Ifstr_Weather_Header_Api.Create_Header(header_no_ => HEADER_NO_,
+                                        year_ => :{2020},
+                                        month_ => :{12},
+                                        username_ => :{"denemeUsername"});
+                                    :RESULT := HEADER_NO_;
+                                        END;";
+                OracleCommand cmd = new OracleCommand(command);
+                cnn.Open();
+                cmd.ExecuteNonQuery();
+            }
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }
