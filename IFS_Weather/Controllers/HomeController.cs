@@ -48,6 +48,82 @@ namespace IFS_Weather.Controllers
         {
             return View();
         }
+        public ActionResult UserManagement()
+        {
+            return View(db.Users.ToList());
+        }
+        // GET: UserModels/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            UserModel userModel = db.Users.Find(id);
+            if (userModel == null)
+            {
+                return HttpNotFound();
+            }
+            return View(userModel);
+        }
+        // GET: UserModels/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+        // POST: UserModels/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "UserId,Username,Password,Name,UserType,DefaultCityName,Status")] UserModel userModel)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Users.Add(userModel);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(userModel);
+        }
+        // GET: UserModels/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            UserModel userModel = db.Users.Find(id);
+            if (userModel == null)
+            {
+                return HttpNotFound();
+            }
+            return View(userModel);
+        }
+        // POST: UserModels/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "UserId,Username,Password,Name,UserType,DefaultCityName,Status")] UserModel userModel)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(userModel).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(userModel);
+        }
+        // GET: UserModels/Delete/5
+        public ActionResult Delete(int id)
+        {
+            UserModel userModel = db.Users.Find(id);
+            db.Users.Remove(userModel);
+            db.SaveChanges();
+            return RedirectToAction("UserManagement");
+        }
         public new ActionResult Profile()
         {
             using (var ctx = new IFSAppContext())
@@ -202,9 +278,98 @@ namespace IFS_Weather.Controllers
             }
             return RedirectToAction("Admin");
         }
-        public ActionResult UserManagement()
+        public ActionResult WeatherManagement()
         {
-            return View(db.Users.ToList());
+            return View(db.WeatherInfos.ToList());
+        }
+        // GET: WeatherModels/Details/5
+        public ActionResult DetailsWeather(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            WeatherModel weatherModel = db.WeatherInfos.Find(id);
+            if (weatherModel == null)
+            {
+                return HttpNotFound();
+            }
+            return View(weatherModel);
+        }
+        // GET: WeatherModels/Create
+        public ActionResult CreateWeather()
+        {
+            return View();
+        }
+        // POST: WeatherModels/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateWeather([Bind(Include = "WeatherId,WeatherDate,CityName,Temperature,MainStatus,IconPath")] WeatherModel weatherModel)
+        {
+            if (ModelState.IsValid)
+            {
+                db.WeatherInfos.Add(weatherModel);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(weatherModel);
+        }
+        // GET: WeatherModels/Edit/5
+        public ActionResult EditWeather(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            WeatherModel weatherModel = db.WeatherInfos.Find(id);
+            if (weatherModel == null)
+            {
+                return HttpNotFound();
+            }
+            return View(weatherModel);
+        }
+        // POST: WeatherModels/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditWeather([Bind(Include = "WeatherId,WeatherDate,CityName,Temperature,MainStatus,IconPath")] WeatherModel weatherModel)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(weatherModel).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(weatherModel);
+        }
+        public ActionResult DeleteWeather(int id)
+        {
+            WeatherModel weatherModel = db.WeatherInfos.Find(id);
+            db.WeatherInfos.Remove(weatherModel);
+            db.SaveChanges();
+            return RedirectToAction("WeatherManagement");
+        }
+        // POST: WeatherModels/Delete/5
+        [HttpPost, ActionName("DeleteWeather")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            WeatherModel weatherModel = db.WeatherInfos.Find(id);
+            db.WeatherInfos.Remove(weatherModel);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

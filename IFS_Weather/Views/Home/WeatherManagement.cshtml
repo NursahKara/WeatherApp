@@ -1,0 +1,58 @@
+﻿@model IEnumerable<IFS_Weather.Models.WeatherModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.WeatherDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CityName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Temperature)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MainStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IconPath)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.WeatherDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CityName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Temperature)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MainStatus)
+        </td>
+        <td>
+            <img src="@item.IconPath" style="height:64px;width:64px;" /> 
+
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditWeather", new { id=item.WeatherId }) |
+            @Html.ActionLink("Details", "DetailsWeather", new { id=item.WeatherId }) |
+            @Html.ActionLink("Delete", "DeleteWeather", new { id=item.WeatherId })
+        </td>
+    </tr>
+}
+
+</table>
