@@ -6,33 +6,102 @@
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title></title>
+        <style>
+            body {
+                background-image: url(../../assests/blur.png);
+                background-size: cover;
+                background-repeat: no-repeat;
+                width: 100%;
+                padding:30px;
+                color:white;
+            }          
+            .parent-style-one a {
+                text-decoration: none;
+                color: white;
+            }
+            .class{
+                color:white
+            }
+            .button {
+            position: relative;
+            background-color: darkviolet;
+            border: none;
+            font-size: 12px;
+            color: #FFFFFF;
+            padding: 10px;
+            width: 100px;
+            text-align: center;
+            transition-duration: 0.4s;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 18px;
+            margin-bottom: 8px
+        }
+
+            .button:after {
+                content: "";
+                background: black;
+                display: block;
+                position: absolute;
+                padding-top: 300%;
+                padding-left: 350%;
+                margin-left: -20px !important;
+                margin-top: -120%;
+                opacity: 0;
+                transition: all 0.8s
+            }
+
+            .button:active:after {
+                padding: 0;
+                margin: 0;
+                opacity: 1;
+                transition: 0s
+            }
+
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: #f1f1f1;
+            border-radius: 15px;
+        }
+        </style>
     </head>
-    <body style="padding:20px">
-        <div>
+    <body>
+        <div class="parent-style-one">
             @Html.ActionLink("Geri", "Admin")
         </div>
-        <h2>Weather Management</h2>
-        <p>
-            <a class="btn btn-default" href="#" style="color: darkviolet; align-items:flex-end" data-toggle="modal" data-target="#modalcreate">Yeni Kayıt!</a>
-        </p>
+        <center>
+            <h2>Weather Management</h2>
+        </center>
+        <hr />
+
         @using (Html.BeginForm())
         {
-            <p>
-                @Html.TextBox("SearchString")
-                <input type="submit" value="Ara" />
-            </p>
+            <div style="float:left;margin-right:30px">
+                <a class="btn btn-default" href="#" style="color: black; align-items:flex-end" data-toggle="modal" data-target="#modalcreate">Yeni Kayıt!</a>
+            </div>
+            <div>
+                <div>
+                    @Html.TextBox("SearchString", null, new { style = "height:35px;color:black" })
+                    <input type="submit" style="color:black" value="Ara" />
+                </div>
+                <div style="float:right;color:white">
+                    <div class="parent-style-one">
+                        <img src="~/assests/siralama.png" style="width:12px;height:12px;" />
+                        @Html.ActionLink("Şehir", "WeatherManagement", new { sortOrder = ViewBag.NameSortParm }) |
+                        @Html.ActionLink("Tarih", "WeatherManagement", new { sortOrder = ViewBag.DateSortParm })
+                    </div>
+                </div>
+            </div>
+           
         }
-        <div style="float:right">
-            <img src="~/assests/sıralama.png" style="width:10px;height:10px;" />
-            @Html.ActionLink("Şehir", "WeatherManagement", new { sortOrder = ViewBag.NameSortParm }) |
 
-
-            @Html.ActionLink("Tarih", "WeatherManagement", new { sortOrder = ViewBag.DateSortParm })
-        </div>
 
 
         <table class="table">
-            <tr>
+            <tr style="color:white">
                 <th>
                     @Html.DisplayNameFor(model => model.WeatherDate)
                 </th>
@@ -53,7 +122,7 @@
 
             @foreach (var item in Model)
             {
-                <tr>
+                <tr style="color:white">
                     <td>
                         @Html.DisplayFor(modelItem => item.WeatherDate)
                     </td>
@@ -67,13 +136,16 @@
                         @Html.DisplayFor(modelItem => item.MainStatus)
                     </td>
                     <td>
-                        <img src="@item.IconPath" style="height:64px;width:64px;" />
+                        <img src="@item.IconPath" style="height:64px;width:64px;border-radius:15px" />
 
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "EditWeather", new { id = item.WeatherId }) |
-                        @Html.ActionLink("Details", "DetailsWeather", new { id = item.WeatherId }) |
-                        @Html.ActionLink("Delete", "DeleteWeather", new { id = item.WeatherId })
+                        <div class="parent-style-one">
+                            @Html.ActionLink("Edit", "EditWeather", new { id = item.WeatherId }) |
+                            @Html.ActionLink("Details", "DetailsWeather", new { id = item.WeatherId }) |
+                            @Html.ActionLink("Delete", "DeleteWeather", new { id = item.WeatherId })
+                        </div>
+
                     </td>
                 </tr>
             }
@@ -93,7 +165,7 @@
                             <span aria-hidden="true" style="color:black">&times;</span>
                         </button>
                         <center>
-                            <h3 class="modal-title" style="margin-top:20px;color:black;font-weight:bold;justify-content:center;align-items:center">Üye Ol</h3>
+                            <h3 class="modal-title" style="margin-top:20px;color:black;font-weight:bold;justify-content:center;align-items:center">Yeni Kayıt Ekle</h3>
                         </center>
                     </div>
                     <div class="modal-body">
@@ -101,8 +173,8 @@
                         {
                             <form>
                                 <center>
-                                    <input type="date" style="border:none; width:100%" name="date" placeholder="Tarih" required />
-                                    <select name="cityName" class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray" type="button" required>
+                                    <input type="date" style="border-radius:15px;border:none; width:100%;height:50px;color:black;background-color:#F1F1F1" name="date" placeholder="Tarih" required />
+                                    <select name="cityName" class="btn btn-primary dropdown-toggle" style="width:280px;border-radius:15px;height:50px;background-color:#F1F1F1;color:gray;border-color:black" type="button" required>
                                         <option value="">Şehir Seçin</option>
                                         <option value="istanbul">İstanbul</option>
                                         <option value="izmir">İzmir</option>

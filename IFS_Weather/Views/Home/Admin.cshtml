@@ -9,7 +9,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title></title>
+
     <style>
         body {
             background-image: url(../../assests/blur.png);
@@ -51,11 +53,22 @@
             border-radius: 0 0 15px 15px;
             flex-direction: row;
         }
-          .parent-style-one a {
+
+        .parent-style-one a {
             text-decoration: none;
             color: black
         }
     </style>
+    <script>
+         $(document).ready(function(){
+          $("#getdata").on("click",function()
+          {
+           alert('Veriler başarıyla çekildi.');
+          });
+
+         });
+
+    </script>
 </head>
 <body>
     <div class="header">
@@ -63,7 +76,7 @@
         <hr />
         <h2 style="color:white">Veritabanına Aktarım</h2>
         <div class="parent-style-one">
-            <button>@Html.ActionLink("Verileri Çek", "UpdateWeatherInfo")</button>
+            <button id="getdata">@Html.ActionLink("Verileri Çek", "UpdateWeatherInfo")</button>
         </div>
         <h2 style="color:white;text-decoration:none">Kullanıcı Yönetimi</h2>
         <div class="parent-style-one">
@@ -74,7 +87,11 @@
         <div class="parent-style-one">
             <button>@Html.ActionLink("Hava Durumu Yönetimi", "WeatherManagement")</button>
         </div>
+        <h2 style="color:white;text-decoration:none">Oracle Veritabanına Aktarım</h2>
 
+        <div class="parent-style-one">
+            <button id="getdata">@Html.ActionLink("Oracle Veritabanına Aktarım", "TransferToDatabase")</button>
+        </div>
 
 
         <br />

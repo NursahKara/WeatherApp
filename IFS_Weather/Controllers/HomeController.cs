@@ -409,24 +409,77 @@ namespace IFS_Weather.Controllers
             base.Dispose(disposing);
         }
         [HttpGet]
-        [Authorize(Roles = "Yönetici")]
         [AllowAnonymous]
-        public ActionResult TransferToOracle()
+        [Authorize(Roles = "Yönetici")]
+        public ActionResult TransferToDatabase()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Yönetici")]
+        public ActionResult TransferToOracle(string date)
         {
             using (OracleConnection cnn = new OracleConnection(ConfigurationManager.ConnectionStrings["oraclecnn"].ConnectionString))
             {
-                string command = $@"DECLARE
-                                        HEADER_NO_ NUMBER;
-                                    BEGIN
-                                        IFSAPP.Ifstr_Weather_Header_Api.Create_Header(header_no_ => HEADER_NO_,
-                                        year_ => :{2020},
-                                        month_ => :{12},
-                                        username_ => :{"denemeUsername"});
-                                    :RESULT := HEADER_NO_;
-                                        END;";
-                OracleCommand cmd = new OracleCommand(command);
                 cnn.Open();
-                cmd.ExecuteNonQuery();
+                using (OracleCommand cmd = cnn.CreateCommand())
+                {
+                    try
+                    {
+                        var dt = DateTime.Parse(date);
+                        string command = $@"DECLARE
+                                            HEADER_NO_ NUMBER;
+                                            BEGIN
+                                            IFSAPP.Ifstr_Weather_Header_Api.Create_Header(header_no_ => HEADER_NO_,
+                                            year_ => :YEAR,
+                                            month_ => :MONTH,
+                                            username_ => :USERNAME);
+                                            :RESULT := HEADER_NO_;
+                                            END;
+                                            /";
+                        var headerNo = Int32.Parse(DateTime.Now.ToString("yyyyMM"));
+                        List<OracleParameter> prms = new List<OracleParameter>();
+                        prms.Add(new OracleParameter("YEAR", dt.Year));
+                        prms.Add(new OracleParameter("MONTH", dt.Month));
+                        prms.Add(new OracleParameter("USERNAME", User.Identity.Name));
+                        prms.Add(new OracleParameter("RESULT", 5));
+                        cmd.Parameters.AddRange(prms.ToArray());
+                        cmd.CommandText = command;
+                        var weatherInfos = db.WeatherInfos.Where(w => w.WeatherDate.Year == dt.Year && w.WeatherDate.Month == dt.Month).ToList();
+
+                        cmd.ExecuteNonQuery();
+                        foreach (var w in weatherInfos)
+                        {
+                            cmd.Parameters.Clear();
+                            prms.Clear();
+                            cmd.CommandText = $@"BEGIN
+                                                IFSAPP.Ifstr_Weather_Detail_Api.Add_Detail(header_no_ => :HEADER_NO,
+                                                weather_date_ => :WEATHER_DATE,
+                                                city_name_ => :CITY_NAME,
+                                                main_status_ => :MAIN_STATUS,
+                                                temperature_ => :TEMPERATURE);
+                                                END;
+                                                /";
+                            prms.Add(new OracleParameter("HEADER_NO", 5));
+                            prms.Add(new OracleParameter("WEATHER_DATE", w.WeatherDate));
+                            prms.Add(new OracleParameter("CITY_NAME", w.CityName));
+                            prms.Add(new OracleParameter("MAIN_STATUS", w.MainStatus));
+                            prms.Add(new OracleParameter("TEMPERATURE", w.Temperature));
+                            cmd.Parameters.AddRange(prms.ToArray());
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+                }
             }
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }

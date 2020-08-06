@@ -386,6 +386,7 @@
     <Content Include="Views\Home\DetailsWeather.cshtml" />
     <Content Include="Views\Home\EditWeather.cshtml" />
     <Content Include="Views\Home\WeatherManagement.cshtml" />
+    <Content Include="Views\Home\TransferToDatabase.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

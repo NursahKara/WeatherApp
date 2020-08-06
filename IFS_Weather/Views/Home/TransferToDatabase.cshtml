@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "TransferToOracle";
+}
+
+<h2>Oracle Veritabanına Aktarım</h2>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        body {
+            background-image: url(../../assests/blur.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+            padding: 30px;
+            color: white;
+        }
+
+        .parent-style-one a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .class {
+            color: white
+        }
+
+        .button {
+            position: relative;
+            background-color: darkviolet;
+            border: none;
+            font-size: 12px;
+            color: #FFFFFF;
+            padding: 10px;
+            width: 100px;
+            text-align: center;
+            transition-duration: 0.4s;
+            text-decoration: none;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 18px;
+            margin-bottom: 8px
+        }
+
+            .button:after {
+                content: "";
+                background: black;
+                display: block;
+                position: absolute;
+                padding-top: 300%;
+                padding-left: 350%;
+                margin-left: -20px !important;
+                margin-top: -120%;
+                opacity: 0;
+                transition: all 0.8s
+            }
+
+            .button:active:after {
+                padding: 0;
+                margin: 0;
+                opacity: 1;
+                transition: 0s
+            }
+
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: #f1f1f1;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm("TransferToOracle", "Home", FormMethod.Get))
+    {
+        <form>
+            <center>
+                <input type="date" style="border-radius:15px;width:100%;height:50px;color:black;background-color:#F1F1F1" name="date" placeholder="Tarih" required />
+                <br />
+                <button style="align-items:flex-start;margin-top:5px;" class="button" type="submit">Aktar</button>
+                <br />
+            </center>
+        </form>
+    }
+    </body>
+</html>
