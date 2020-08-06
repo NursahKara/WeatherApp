@@ -5,54 +5,108 @@
 }
 
 <h2>Details</h2>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        body {
+            background-image: url(../../assests/blur.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+            color: white;
+            padding: 30px
+        }
 
-<div>
-    <h4>WeatherModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.WeatherDate)
-        </dt>
+        #main {
+            height: auto;
+            width: 1200px;
+            background-image: url(../../assests/manzara.jpg);
+            border-radius: 15px;
+            margin: 30px auto auto auto;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-color: black;
+            border-width: 20px;
+            justify-content: flex-end;
+            align-items: flex-end;
+            vertical-align: bottom
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.WeatherDate)
-        </dd>
+        .header {
+            height: 350px;
+            padding: 30px
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CityName)
-        </dt>
+        .weatherInfoHeader {
+            height: 50px;
+            padding-left: 5px;
+            padding-top: 20px
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.CityName)
-        </dd>
+        .weatherinfo {
+            height: 200px;
+            width: 1200px;
+            opacity: 0.5;
+            border-radius: 0 0 15px 15px;
+            flex-direction: row;
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Temperature)
-        </dt>
+        .parent-style-one a {
+            text-decoration: none;
+            color: white
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.WeatherDate)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Temperature)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.WeatherDate)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MainStatus)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.CityName)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.MainStatus)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.CityName)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IconPath)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Temperature)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IconPath)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Temperature)
+            </dd>
 
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.WeatherId }) |
-    @Html.ActionLink("Listeye Dön", "WeatherManagement")
-</p>
+            <dt>
+                @Html.DisplayNameFor(model => model.MainStatus)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MainStatus)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IconPath)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IconPath)
+            </dd>
+
+        </dl>
+    </div>
+    <p class="parent-style-one">
+        @Html.ActionLink("Edit", "Edit", new { id = Model.WeatherId }) |
+        @Html.ActionLink("Geri", "WeatherManagement")
+    </p>
+</body>
+</html>
+

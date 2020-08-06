@@ -5,61 +5,124 @@
 }
 
 <h2>Details</h2>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        body {
+            background-image: url(../../assests/blur.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+            color:white;
+            padding:30px
+        }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
+        #main {
+            height: 600px;
+            width: 1200px;
+            background-image: url(../../assests/manzara.jpg);
+            border-radius: 15px;
+            margin: 30px auto auto auto;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-color: black;
+            border-width: 20px;
+            justify-content: flex-end;
+            align-items: flex-end;
+            vertical-align: bottom
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.Username)
-        </dd>
+        .header {
+            height: 350px;
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
+        .weatherInfoHeader {
+            height: 50px;
+            padding-left: 5px;
+            padding-top: 210px
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>
+        .weatherinfo {
+            height: 200px;
+            width: 1200px;
+            background-color: black;
+            opacity: 0.5;
+            border-radius: 0 0 15px 15px;
+            flex-direction: row;
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+        .profile-card {
+            padding-top: 30px;
+            width: 800px
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+        .profile-info {
+            width: 800px
+        }
+         .parent-style-one a {
+            text-decoration: none;
+            color: white
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Username)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.UserType)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Username)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.UserType)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DefaultCityName)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Password)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.DefaultCityName)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.UserType)
+            </dt>
 
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) |
-    @Html.ActionLink("Geri", "UserManagement")
-</p>
+            <dd>
+                @Html.DisplayFor(model => model.UserType)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DefaultCityName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DefaultCityName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+
+        </dl>
+    </div>
+    <p class="parent-style-one">
+        @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) |
+        @Html.ActionLink("Geri", "UserManagement")
+    </p>
+
+</body>
+</html>

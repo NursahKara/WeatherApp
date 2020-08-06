@@ -109,29 +109,29 @@
         <div id="main">
             <div class="header">
                 <div style="float:left">
-                    <h1 style="padding:50px 50px 0px 50px;color:white"><img src="~/assests/pin.png" style="height:50px;width:50px" />@Model.WeatherModels[0].CityName</h1>
+                    <h1 style="padding:50px 50px 0px 50px;color:white"><img src="assests/pin.png" style="height:50px;width:50px" />@Model.WeatherModels[0].CityName</h1>
                     <h3 style="color:white;margin-left:50px">@Model.WeatherModels[0].WeatherDate.ToString("dd MMMM dddd", new System.Globalization.CultureInfo("tr-TR"))</h3>
                     @if (Model.WeatherModels[0].MainStatus == "Güneşli")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C </h3>
-                        <img src="~/assests/day.svg" style="height:150px;width:150px;margin-left:30px" /> }
+                        <img src="assests/day.svg" style="height:150px;width:150px;margin-left:30px" /> }
                     else if (Model.WeatherModels[0].MainStatus == "Açık")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
-                        <img src="~/assests/night.svg" style="height:113px;width:200px;margin-left:50px" /> }
+                        <img src="assests/night.svg" style="height:113px;width:200px;margin-left:50px" /> }
                     else if (Model.WeatherModels[0].MainStatus == "Parçalı Bulutlu")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
-                        <img src="~/assests/cloudy-day-1.svg" style="height:120px;width:120px;margin-left:50px" /> 
+                        <img src="assests/cloudy-day-1.svg" style="height:120px;width:120px;margin-left:50px" /> 
                     }
                     else if (Model.WeatherModels[0].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
-                        <img src="~/assests/rainy-1.svg" style="height:190px;width:176px;margin-left:50px" /> }
+                        <img src="assests/rainy-1.svg" style="height:190px;width:176px;margin-left:50px" /> }
                     else if (Model.WeatherModels[0].MainStatus == "Sisli")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
-                        <img src="~/assests/sisli.gif" style="height:146px;width:300px;margin-left:50px" />}
+                        <img src="assests/sisli.gif" style="height:146px;width:300px;margin-left:50px" />}
                 </div>
                 <div style="float:right">
                     <div style="float: right;padding:0px 20px 0 20px;color:white">
@@ -147,12 +147,12 @@
 
             </div>
             <div class="weatherInfoHeader">
-                <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
-                <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
-                <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+                <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+                <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="assests/man.png" style="height:20px;width:20px;" />Profil</a>
+                <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
                 @if (User.IsInRole("Yönetici"))
                 {
-                    <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>}
+                    <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>}
             </div>
             <div class="weatherinfo">
 
@@ -167,19 +167,19 @@
                             <div style="float:left;">
                                 @if (Model.WeatherModels[i].MainStatus == "Güneşli")
                                 {
-                                    <img src="~/assests/day.svg" style="height:60px;width:60px;margin-left:5px" /> }
+                                    <img src="assests/day.svg" style="height:60px;width:60px;margin-left:5px" /> }
                                 else if (Model.WeatherModels[i].MainStatus == "Açık")
                                 {
-                                    <img src="~/assests/night.svg" style="height:64px;width:64px;margin-left:5px" /> }
+                                    <img src="assests/night.svg" style="height:64px;width:64px;margin-left:5px" /> }
                                 else if (Model.WeatherModels[i].MainStatus == "Parçalı Bulutlu")
                                 {
-                                    <img src="~/assests/cloudy-day-1.svg" style="height: 64px;width: 64px;margin-left: 5px" /> }
+                                    <img src="assests/cloudy-day-1.svg" style="height: 64px;width: 64px;margin-left: 5px" /> }
                                 else if (Model.WeatherModels[i].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
                                 {
-                                    <img src="~/assests/rainy-1.svg" style="height:64px;width:64px;margin-left:5px" /> }
+                                    <img src="assests/rainy-1.svg" style="height:64px;width:64px;margin-left:5px" /> }
                                 else if (Model.WeatherModels[i].MainStatus == "Sisli")
                                 {
-                                    <img src="~/assests/sisli.gif" style="height:64px;width:64px;margin-left:5px" />}
+                                    <img src="assests/sisli.gif" style="height:64px;width:64px;margin-left:5px" />}
                             </div>
                             <div style="float:left;margin-left:20px">
                                 <h3 style="color:white;margin-left:5px">@Model.WeatherModels[i].Temperature °C</h3>
@@ -193,12 +193,12 @@
     {
         <div id="main">
             <div class="weatherInfoHeader">
-                <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
-                <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
-                <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+                <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+                <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="assests/man.png" style="height:20px;width:20px;" />Profil</a>
+                <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
                 @if (User.IsInRole("Yönetici"))
                 {
-                    <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>}
+                    <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>}
             </div>
         </div>
     }

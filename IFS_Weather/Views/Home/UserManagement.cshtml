@@ -1,11 +1,8 @@
 ﻿@model IEnumerable<IFS_Weather.Models.UserModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Kullanıcı Yönetimi";
 }
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,20 +57,16 @@
 </head>
 <body>
     <div class="header">
-        <h1 style="color: white ">Admin</h1>
-        <hr />
-        <h2 style="color:white;text-decoration:none">Kullanıcı Yönetimi</h2>
+        <center>
+            <h2 style="color:white;text-decoration:none">Kullanıcı Yönetimi</h2>
+        </center>
         <br />
         <br />
-
         <table class="table">
             <tr style="color:white">
                 <th>
                     @Html.DisplayNameFor(model => model.Username)
                 </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.Password)
-                    </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>

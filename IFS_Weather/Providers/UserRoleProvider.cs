@@ -41,6 +41,8 @@ namespace IFS_Weather.Providers
             using (var ctx = new IFSAppContext())
             {
                 var user = ctx.Users.Where(w => w.Username == username).SingleOrDefault();
+                if (user == null)
+                    return null;
                 string[] roles = new string[1];
                 roles[0] = user.UserType;
                 return roles;

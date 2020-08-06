@@ -34,7 +34,7 @@ namespace IFS_Weather.Controllers
                 var vm = new IndexViewModel();
                 var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();   //forms authentication identity.name i yani benzersiz olan kullanıcı adını tutuyor. kullanıcı adı cookie de tutulan bilgi
                 var dateTimeNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-                vm.WeatherModels = ctx.WeatherInfos.Where(w => w.CityName == (cityName ?? user.DefaultCityName) && w.WeatherDate >= dateTimeNow).Take(7).ToList();
+                vm.WeatherModels = ctx.WeatherInfos.Where(w => w.CityName == (cityName ?? user.DefaultCityName) && w.WeatherDate >= dateTimeNow).OrderBy(w => w.WeatherDate).Take(7).ToList();
                 var dataPoints = new List<DataPoint>();
                 foreach (var item in vm.WeatherModels)
                 {
@@ -423,6 +423,7 @@ namespace IFS_Weather.Controllers
                 cnn.Open();
                 using (OracleCommand cmd = cnn.CreateCommand())
                 {
+                    //cmd.BindByName = true;
                     try
                     {
                         var dt = DateTime.Parse(date);
@@ -434,18 +435,18 @@ namespace IFS_Weather.Controllers
                                             month_ => :MONTH,
                                             username_ => :USERNAME);
                                             :RESULT := HEADER_NO_;
-                                            END;
-                                            /";
-                        var headerNo = Int32.Parse(DateTime.Now.ToString("yyyyMM"));
+                                            END;";
+                        string result = "";
                         List<OracleParameter> prms = new List<OracleParameter>();
                         prms.Add(new OracleParameter("YEAR", dt.Year));
                         prms.Add(new OracleParameter("MONTH", dt.Month));
                         prms.Add(new OracleParameter("USERNAME", User.Identity.Name));
                         prms.Add(new OracleParameter("RESULT", 5));
+                        //prms.Add(new OracleParameter("RESULT", OracleDbType.Varchar2, result, ParameterDirection.Output));
                         cmd.Parameters.AddRange(prms.ToArray());
                         cmd.CommandText = command;
                         var weatherInfos = db.WeatherInfos.Where(w => w.WeatherDate.Year == dt.Year && w.WeatherDate.Month == dt.Month).ToList();
-
+                        int i = 1;
                         cmd.ExecuteNonQuery();
                         foreach (var w in weatherInfos)
                         {
@@ -457,9 +458,8 @@ namespace IFS_Weather.Controllers
                                                 city_name_ => :CITY_NAME,
                                                 main_status_ => :MAIN_STATUS,
                                                 temperature_ => :TEMPERATURE);
-                                                END;
-                                                /";
-                            prms.Add(new OracleParameter("HEADER_NO", 5));
+                                                END;";
+                            prms.Add(new OracleParameter("HEADER_NO", i++));
                             prms.Add(new OracleParameter("WEATHER_DATE", w.WeatherDate));
                             prms.Add(new OracleParameter("CITY_NAME", w.CityName));
                             prms.Add(new OracleParameter("MAIN_STATUS", w.MainStatus));
@@ -469,7 +469,7 @@ namespace IFS_Weather.Controllers
                             {
                                 cmd.ExecuteNonQuery();
                             }
-                            catch
+                            catch(Exception ex)
                             {
                                 continue;
                             }
@@ -477,11 +477,11 @@ namespace IFS_Weather.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        return RedirectToAction("TransferToDatabase");
                     }
                 }
             }
-            return new HttpStatusCodeResult(HttpStatusCode.OK);
+            return RedirectToAction("TransferToDatabase");
         }
     }
 }

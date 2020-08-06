@@ -1,17 +1,13 @@
 ﻿@model IEnumerable<IFS_Weather.Models.UserModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Admin";
 }
-
-
 
 <!DOCTYPE html>
 <html>
 <head>
-
     <title></title>
-
     <style>
         body {
             background-image: url(../../assests/blur.png);
@@ -92,18 +88,14 @@
         <div class="parent-style-one">
             <button id="getdata">@Html.ActionLink("Oracle Veritabanına Aktarım", "TransferToDatabase")</button>
         </div>
-
-
         <br />
-
-        <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="~/assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
-        <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="~/assests/man.png" style="height:20px;width:20px;" />Profil</a>
-        <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
+        <a href="LogOut" style="color:white ;margin-left:20px;margin-right:20px;text-decoration:none;float:right"><img src="assests/logout-red.png" style="height:20px;width:20px;" />Çıkış Yap</a>
+        <a href="Profile" style="color:white;margin-left:20px;text-decoration:none;float:right"><img src="assests/man.png" style="height:20px;width:20px;" />Profil</a>
+        <a href="Index" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="assests/home-blue.png" style="height: 20px; width: 20px;" />Ana Sayfa <span class="sr-only">(current)</span></a>
         @if (User.IsInRole("Yönetici"))
         {
-            <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="~/assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>
+            <a href="Admin" style="color: white; margin-left:20px;text-decoration:none;float:right"><img src="assests/settings.png" style="height: 20px; width: 20px;" />Yönetici Paneli <span class="sr-only"></span></a>
         }
-
     </div>
 
 </body>
