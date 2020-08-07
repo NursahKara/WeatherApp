@@ -122,12 +122,20 @@
                     else if (Model.WeatherModels[0].MainStatus == "Parçalı Bulutlu")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
-                        <img src="assests/cloudy-day-1.svg" style="height:120px;width:120px;margin-left:50px" /> 
+                        <img src="assests/cloudy-day-1.svg" style="height:120px;width:120px;margin-left:50px" />
                     }
                     else if (Model.WeatherModels[0].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
                         <img src="assests/rainy-1.svg" style="height:190px;width:176px;margin-left:50px" /> }
+                    else if (Model.WeatherModels[0].MainStatus == "Bölgesel düzensiz gök gürültülü yağmurlu")
+                    {
+                        <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
+                        <img src="assests/thunder.svg" style="height:190px;width:176px;margin-left:50px" /> }
+                    else if (Model.WeatherModels[0].MainStatus == "Bölgesel gök gürültülü düzensiz hafif yağmur")
+                    {
+                        <h3 style="color:white;margin-left:50px;margin-bottom:10px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
+                        <img src="assests/thunder.svg" style="height:190px;width:176px;margin-left:50px" /> }
                     else if (Model.WeatherModels[0].MainStatus == "Sisli")
                     {
                         <h3 style="color:white;margin-left:50px;margin-bottom:40px">@Model.WeatherModels[0].MainStatus | @Model.WeatherModels[0].Temperature °C</h3>
@@ -177,6 +185,12 @@
                                 else if (Model.WeatherModels[i].MainStatus == "Bölgesel düzensiz yağmur yağışlı")
                                 {
                                     <img src="assests/rainy-1.svg" style="height:64px;width:64px;margin-left:5px" /> }
+                                else if (Model.WeatherModels[i].MainStatus == "Bölgesel düzensiz gök gürültülü yağmurlu")
+                                {
+                                    <img src="assests/thunder.svg" style="height:64px;width:64px;margin-left:5px" /> }
+                                else if (Model.WeatherModels[i].MainStatus == "Bölgesel gök gürültülü düzensiz hafif yağmur")
+                                {
+                                    <img src="assests/thunder.svg" style="height:64px;width:64px;margin-left:5px" /> }
                                 else if (Model.WeatherModels[i].MainStatus == "Sisli")
                                 {
                                     <img src="assests/sisli.gif" style="height:64px;width:64px;margin-left:5px" />}

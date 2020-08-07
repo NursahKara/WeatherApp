@@ -85,11 +85,11 @@ namespace IFS_Weather.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             UserModel userModel = db.Users.Where(w => w.Username == id).SingleOrDefault();
-            userModel.Password = "";
             if (userModel == null)
             {
                 return HttpNotFound();
             }
+            userModel.Password = "";
             return View(userModel);
         }
         // POST: UserModels/Edit/5
@@ -99,10 +99,9 @@ namespace IFS_Weather.Controllers
         {
             using (var ctx = new IFSAppContext())
             {
-                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
-                user.DefaultCityName = model.DefaultCityName ?? user.DefaultCityName;
+                var user = ctx.Users.Where(w => w.Username == model.Username).SingleOrDefault();//kullanıcyı bulabilmek için ön yüzden gizli bi parametre gönderdik
+                user.DefaultCityName = !String.IsNullOrEmpty(model.DefaultCityName) ? model.DefaultCityName : user.DefaultCityName;
                 user.Name = model.Name ?? user.Name;
-                user.Username = model.Username ?? user.Username;
                 user.Password = model.Password != null ? BCryptHelper.HashPassword(model.Password, BCryptHelper.GenerateSalt(12)) : user.Password;
                 ctx.SaveChanges();
             }
@@ -129,6 +128,20 @@ namespace IFS_Weather.Controllers
                 };
                 return View(profile);
             }
+        }
+        [HttpPost]
+        public ActionResult EditProfile(RegisterModel model)
+        {
+            using (var ctx = new IFSAppContext())
+            {
+                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
+                user.DefaultCityName = model.DefaultCityName ?? user.DefaultCityName;
+                user.Name = model.Name ?? user.Name;
+                user.Username = model.Username ?? user.Username;
+                user.Password = model.Password != null ? BCryptHelper.HashPassword(model.Password, BCryptHelper.GenerateSalt(12)) : user.Password;
+                ctx.SaveChanges();
+            }
+            return RedirectToAction("Profile");
         }
         [AllowAnonymous]
         public ActionResult Login()
@@ -217,20 +230,7 @@ namespace IFS_Weather.Controllers
                 }
             }
         }
-        [HttpPost]
-        public ActionResult EditProfile(RegisterModel model)
-        {
-            using (var ctx = new IFSAppContext())
-            {
-                var user = ctx.Users.Where(w => w.Username == User.Identity.Name).SingleOrDefault();
-                user.DefaultCityName = model.DefaultCityName ?? user.DefaultCityName;
-                user.Name = model.Name ?? user.Name;
-                user.Username = model.Username ?? user.Username;
-                user.Password = model.Password != null ? BCryptHelper.HashPassword(model.Password, BCryptHelper.GenerateSalt(12)) : user.Password;
-                ctx.SaveChanges();
-            }
-            return RedirectToAction("Profile");
-        }
+       
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
@@ -285,7 +285,7 @@ namespace IFS_Weather.Controllers
         }
         public ActionResult WeatherManagement(string sortOrder, string searchString)
         {
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+            ViewBag.CitySortParm = String.IsNullOrEmpty(sortOrder) ? "City_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "Date_desc" : "Date";
             var wi = from w in db.WeatherInfos
                      select w;
@@ -295,7 +295,7 @@ namespace IFS_Weather.Controllers
             }
             switch (sortOrder)
             {
-                case "Name_desc":
+                case "City_desc":
                     wi = wi.OrderByDescending(w => w.CityName);
                     break;
                 case "Date":
@@ -469,7 +469,7 @@ namespace IFS_Weather.Controllers
                             {
                                 cmd.ExecuteNonQuery();
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 continue;
                             }
