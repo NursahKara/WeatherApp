@@ -436,18 +436,19 @@ namespace IFS_Weather.Controllers
                                             username_ => :USERNAME);
                                             :RESULT := HEADER_NO_;
                                             END;";
-                        string result = "";
+                        decimal result = 0;
                         List<OracleParameter> prms = new List<OracleParameter>();
                         prms.Add(new OracleParameter("YEAR", dt.Year));
                         prms.Add(new OracleParameter("MONTH", dt.Month));
                         prms.Add(new OracleParameter("USERNAME", User.Identity.Name));
-                        prms.Add(new OracleParameter("RESULT", 5));
-                        //prms.Add(new OracleParameter("RESULT", OracleDbType.Varchar2, result, ParameterDirection.Output));
+                        //prms.Add(new OracleParameter("RESULT", 5));
+                        prms.Add(new OracleParameter("RESULT", OracleDbType.Decimal, result, ParameterDirection.Output));
                         cmd.Parameters.AddRange(prms.ToArray());
                         cmd.CommandText = command;
                         var weatherInfos = db.WeatherInfos.Where(w => w.WeatherDate.Year == dt.Year && w.WeatherDate.Month == dt.Month).ToList();
                         int i = 1;
                         cmd.ExecuteNonQuery();
+                        result =Convert.ToDecimal(cmd.Parameters[3].Value.ToString());
                         foreach (var w in weatherInfos)
                         {
                             cmd.Parameters.Clear();
@@ -459,7 +460,7 @@ namespace IFS_Weather.Controllers
                                                 main_status_ => :MAIN_STATUS,
                                                 temperature_ => :TEMPERATURE);
                                                 END;";
-                            prms.Add(new OracleParameter("HEADER_NO", i++));
+                            prms.Add(new OracleParameter("HEADER_NO", result));
                             prms.Add(new OracleParameter("WEATHER_DATE", w.WeatherDate));
                             prms.Add(new OracleParameter("CITY_NAME", w.CityName));
                             prms.Add(new OracleParameter("MAIN_STATUS", w.MainStatus));
